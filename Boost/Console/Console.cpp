@@ -2,9 +2,13 @@
 //
 
 #include "stdafx.h"
+using hdd::utility::MS;
 
 int main()
 {
-	std::cout << hdd::asio::HostName::Get() << std::endl;
+	const std::string hostname = MS() << "Hostname: " << hdd::asio::HostName::Get();
+
+	std::cout << hostname << std::endl;
+
 	return 0;
 }

@@ -13,102 +13,78 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{dc56365d-99fd-4c23-9a98-945a5758d07d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base">
-      <UniqueIdentifier>{f1aa4eec-a23c-4806-beb7-b640154ddc43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="KdTree">
-      <UniqueIdentifier>{4316bd87-4b86-4931-a998-ff2b274a2c42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mask">
-      <UniqueIdentifier>{6a876f4b-b2a0-4b26-88a5-d83edb938f83}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Gamma">
       <UniqueIdentifier>{0871d536-92cb-464f-83d9-193557e04bc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Nearest">
-      <UniqueIdentifier>{09deb633-7834-471b-9713-b0b145173979}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Data\data.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Data\iovector.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Data\rawdata.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Data\transform.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Base\message.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Base\universal.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\kdTree\kdtree.h">
-      <Filter>KdTree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Base\makestring.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Mask\mask.h">
-      <Filter>Mask</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Gamma\gamma.h">
-      <Filter>Gamma</Filter>
-    </ClInclude>
     <ClInclude Include="..\Gamma\results.h">
       <Filter>Gamma</Filter>
     </ClInclude>
-    <ClInclude Include="..\Nearest\nearest.h">
-      <Filter>Nearest</Filter>
+    <ClInclude Include="..\Gamma\data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\gamma.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\iovector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\kdtree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\makestring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\mask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\rawdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\universal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Gamma\nearest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Data\data.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Data\iovector.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Data\rawdata.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Data\transform.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Base\message.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Base\universal.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\kdTree\kdtree.cpp">
-      <Filter>KdTree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Mask\mask.cpp">
-      <Filter>Mask</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Gamma\gamma.cpp">
-      <Filter>Gamma</Filter>
-    </ClCompile>
     <ClCompile Include="..\Gamma\results.cpp">
       <Filter>Gamma</Filter>
     </ClCompile>
-    <ClCompile Include="..\Nearest\nearest.cpp">
-      <Filter>Nearest</Filter>
+    <ClCompile Include="..\Gamma\data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\gamma.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\iovector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\kdtree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\mask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\rawdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\universal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Gamma\nearest.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

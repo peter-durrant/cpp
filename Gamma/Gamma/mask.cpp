@@ -8,12 +8,12 @@ Mask::Mask(const Mask& m) :
     mask(m.mask)
 {}
 
-uint Mask::Size(void)
+uint Mask::Size()
 {
     return mask.size();
 }
 
-uint Mask::Length(void)
+uint Mask::Length()
 {
     uint length = 0;
     for (uint i = 0; i < mask.size(); ++i)
@@ -26,7 +26,7 @@ uint Mask::Length(void)
     return length;
 }
 
-bool Mask::Empty(void)
+bool Mask::Empty()
 {
     for (uint i = 0; i < mask.size(); ++i)
     {
@@ -35,14 +35,14 @@ bool Mask::Empty(void)
     return true;
 }
 
-void Mask::Decrement(void)
+void Mask::Decrement()
 {
     for (uint i = 0; i < mask.size(); ++i)
     {
         if (mask[i] == true)
         {
             mask[i] = false;
-            for (uint j = i; j > 0; j--)
+            for (uint j = i; j > 0; --j)
             {
                 mask[j - 1] = true;
             }

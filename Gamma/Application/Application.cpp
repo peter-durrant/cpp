@@ -2,9 +2,9 @@
 //
 
 #include "stdafx.h"
-#include "../Data/rawdata.h"
-#include "../Data/data.h"
-#include "../Data/transform.h"
+#include "../Gamma/rawdata.h"
+#include "../Gamma/data.h"
+#include "../Gamma/transform.h"
 #include "../Gamma/gamma.h"
 #include <iostream>
 

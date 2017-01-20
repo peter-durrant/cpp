@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../kdTree/kdtree.h"
+#include "kdtree.h"
 
 struct near_points
 {
     fp distance;
     vect_uint index_list;
 
-    near_points(void);
+    near_points();
     near_points(fp d, uint i);
     near_points(fp d, const vect_uint& il);
 
@@ -33,16 +33,16 @@ protected:
     vect_fp lower_bound;
 
     void Add_Point(uint index);
-    void Pre_Search(void);
+    void Pre_Search();
     void Search(const node* root);
-    //   bool Ball_Within_Bounds(void);
-    bool Bounds_Overlap_Ball(void);
+    //   bool Ball_Within_Bounds();
+    bool Bounds_Overlap_Ball();
 
 public:
     Nearest(uint q, const kdTree& k, uint p);
     Nearest(const IOVector& q, const kdTree& k, uint p);
-    ~Nearest(void);
-    const std::vector<near_points*>& neighbours(void) const;
+    ~Nearest();
+    const std::vector<near_points*>& neighbours() const;
     const near_points& neighbours(uint p) const;
     friend std::ostream& operator<<(std::ostream& os, const Nearest& n);
 };

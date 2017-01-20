@@ -1,6 +1,4 @@
-#ifndef __UNIVERSAL
-#define __UNIVERSAL
-
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -8,7 +6,6 @@
 #include <vector>
 #include <map>
 #include <iostream>
-
 
 typedef unsigned int uint;
 typedef double fp;
@@ -25,5 +22,3 @@ extern const fp fp_MIN;
 extern const fp fp_MAX;
 
 fp Raise(fp value, uint power);
-
-#endif

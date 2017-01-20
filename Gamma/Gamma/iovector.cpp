@@ -1,4 +1,4 @@
-#include "../Base/universal.h"
+#include "universal.h"
 #include "iovector.h"
 
 IOVector::IOVector() :
@@ -84,13 +84,15 @@ fp IOVector::Output_Vector(uint index) const
 
 std::ostream& operator<<(std::ostream& os, const IOVector& iov)
 {
-    for (uint i = 0; i < iov.input.size(); i++) {
+    for (uint i = 0; i < iov.input.size(); ++i)
+    {
         os << iov.input[i] << " ";
     }
 
     os << " , ";
 
-    for (uint i = 0; i < iov.output.size(); i++) {
+    for (uint i = 0; i < iov.output.size(); ++i)
+    {
         os << iov.output[i] << " ";
     }
 

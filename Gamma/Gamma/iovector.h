@@ -1,4 +1,5 @@
 #pragma once
+
 //class IOVectorExcept : public ExceptionBase {};
 //
 //class BadOperator : public IOVectorExcept

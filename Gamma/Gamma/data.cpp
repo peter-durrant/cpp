@@ -1,13 +1,13 @@
 #include "data.h"
 
-Data::Data(const RawData& rd)
-    : raw_data(rd), transform(rd), data(0), input_mask(transform.Inputs())
+Data::Data(const RawData& rd) :
+    raw_data(rd), transform(rd), data(0), input_mask(transform.Inputs())
 {
     CreateData();
 }
 
-Data::Data(const RawData& rd, const std::vector<FormatType>& ft)
-    : raw_data(rd), transform(rd, ft), data(0), input_mask(transform.Inputs())
+Data::Data(const RawData& rd, const std::vector<FormatType>& ft) :
+    raw_data(rd), transform(rd, ft), data(0), input_mask(transform.Inputs())
 {
     if (rd.Series() != ft.size())
     {
@@ -16,8 +16,8 @@ Data::Data(const RawData& rd, const std::vector<FormatType>& ft)
     CreateData();
 }
 
-Data::Data(const Data& d, uint sv, uint ev)
-    : raw_data(d.raw_data), transform(d.transform), data(0), input_mask(transform.Inputs())
+Data::Data(const Data& d, uint sv, uint ev) :
+    raw_data(d.raw_data), transform(d.transform), data(0), input_mask(transform.Inputs())
 {
     // vector indexes [0..M-1]
     if (sv > ev || sv >= d.Size() || ev >= d.Size())
@@ -33,8 +33,8 @@ Data::Data(const Data& d, uint sv, uint ev)
     }
 }
 
-Data::Data(const Data& d, const Mask& m)
-    : raw_data(d.raw_data), transform(d.transform), data(0), input_mask(m)
+Data::Data(const Data& d, const Mask& m) :
+    raw_data(d.raw_data), transform(d.transform), data(0), input_mask(m)
 {
     IOVector new_vector(input_mask.Length(), d.Outputs());
     for (uint i = 0; i < d.Size(); ++i)

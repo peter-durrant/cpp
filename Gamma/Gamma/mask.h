@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Base/universal.h"
+#include "universal.h"
 
 typedef std::vector<bool> Mask_Type;
 
@@ -13,10 +13,10 @@ public:
     Mask(const uint num_in);
     Mask(const Mask& m);
 
-    uint Size(void);
-    uint Length(void);
-    bool Empty(void);
-    void Decrement(void);
+    uint Size();
+    uint Length();
+    bool Empty();
+    void Decrement();
     void Set_Mask(const Mask& m);
     void Set_Mask(const std::string& m);
 

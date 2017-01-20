@@ -1,19 +1,19 @@
-#include "rawdata.h"
 #include <fstream>
-#include "../Base/makestring.h"
+#include "rawdata.h"
+#include "makestring.h"
 
 using hdd::utility::MS;
 
-RawData::RawData()
-    : data(0), inputs(0), outputs(0)
+RawData::RawData() :
+    data(0), inputs(0), outputs(0)
 {}
 
-RawData::RawData(uint in, uint out)
-    : data(0), inputs(in), outputs(out)
+RawData::RawData(uint in, uint out) :
+    data(0), inputs(in), outputs(out)
 {}
 
-RawData::RawData(const std::string& fn)
-    : filename(fn)
+RawData::RawData(const std::string& fn) :
+    filename(fn)
 {
     std::ifstream ifs(filename.c_str());
     if (!ifs)
@@ -111,7 +111,8 @@ void RawData::Determine_File_Format(std::ifstream& ifs)
     {
         ifs >> number;
 
-        if (!ifs.eof()) {
+        if (!ifs.eof())
+        {
             if (ifs.fail())
             {
                 throw std::runtime_error(MS() << "Bad character(s) found on line " << 1 << " in file: " << filename);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Base/universal.h"
+#include "universal.h"
 #include "gamma.h"
 
 //class Gamma_Result

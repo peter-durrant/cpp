@@ -1,15 +1,15 @@
 #include "transform.h"
 
-FormatType::FormatType()
-    : type(Undefined), inputs(0), outputs(0)
+FormatType::FormatType() :
+    type(Undefined), inputs(0), outputs(0)
 {}
 
-FormatType::FormatType(Transformation_Type t, uint in, uint out)
-    : type(t), inputs(in), outputs(out)
+FormatType::FormatType(Transformation_Type t, uint in, uint out) :
+    type(t), inputs(in), outputs(out)
 {}
 
-Transform::Transform(const RawData& rd)
-    : raw_data(rd), format(0), inputs(0), outputs(0)
+Transform::Transform(const RawData& rd) :
+    raw_data(rd), format(0), inputs(0), outputs(0)
 {
     if (raw_data.Inputs() == 0)
     {
@@ -83,7 +83,8 @@ void Transform::Set_Data_Format()
 {
     if (!Summarise_All())
     {
-        for (uint i = 0; i < raw_data.Inputs() + raw_data.Outputs(); ++i) {
+        for (uint i = 0; i < raw_data.Inputs() + raw_data.Outputs(); ++i)
+        {
             std::cout << std::endl << std::endl << "-------------------------------" << std::endl;
             Summarise(i);
             format[i] = Choose();
@@ -149,7 +150,7 @@ FormatType Transform::Choose()
     }
 
     FormatType ft;
-    switch (choice) 
+    switch (choice)
     {
     case 1:
         ft.type = Input;

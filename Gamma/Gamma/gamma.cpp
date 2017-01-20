@@ -1,9 +1,9 @@
 #include "gamma.h"
 
-#include "../Base/universal.h"
-#include "../Nearest/nearest.h"
-#include "../kdTree/kdtree.h"
-#include "../Base/makestring.h"
+#include "universal.h"
+#include "nearest.h"
+#include "kdtree.h"
+#include "makestring.h"
 
 using hdd::utility::MS;
 
@@ -35,7 +35,8 @@ Regression Linear_Regression(const valarray_fp& x, const valarray_fp& y)
     const uint num_near = x.size();
     const fp num_near_fp = num_near;
 
-    for (uint i = 1; i <= num_near; i++) {
+    for (uint i = 1; i <= num_near; ++i)
+    {
         const uint j = i - 1;
         const fp i_fp = i;
         diffx = x[j] - Mx;
@@ -57,14 +58,20 @@ Regression Linear_Regression(const valarray_fp& x, const valarray_fp& y)
     regression.gradient = Qxy / (num_near_fp * sx * sx);
     regression.intercept = ybar - (regression.gradient * xbar);
 
-    if (num_near == 2) regression.standard_error = 0;
-    else regression.standard_error = sqrt((sy*sy) - (regression.gradient * regression.gradient * sx * sx));
+    if (num_near == 2)
+    {
+        regression.standard_error = 0;
+    }
+    else
+    {
+        regression.standard_error = sqrt((sy*sy) - (regression.gradient * regression.gradient * sx * sx));
+    }
 
     return regression;
 }
 
-Gamma::Gamma(const Data& d, uint p, uint num_m)
-    : data(d), pmax(p), high_moments(num_m)
+Gamma::Gamma(const Data& d, uint p, uint num_m) :
+    data(d), pmax(p), high_moments(num_m)
 {
     if (high_moments > moments_MAX || high_moments < moments_MIN)
     {
@@ -77,13 +84,16 @@ Gamma::Gamma(const Data& d, uint p, uint num_m)
     r.resize(num_moments);
     moments.resize(num_moments);
 
-    for (uint i = 0; i < num_moments; i++)
+    for (uint i = 0; i < num_moments; ++i)
     {
         //      delta[i] = valarray_fp(fp_ZERO, pmax);
         delta[i].resize(pmax);
         gamma[i].resize(data.Outputs());
         //   	for (uint j = 0; j < data.Outputs(); j++) gamma[i][j] = valarray_fp(fp_ZERO, pmax);
-        for (uint j = 0; j < data.Outputs(); j++) gamma[i][j].resize(pmax);
+        for (uint j = 0; j < data.Outputs(); j++)
+        {
+            gamma[i][j].resize(pmax);
+        }
         r[i].resize(data.Outputs());
         //      moments[i] = valarray_fp(fp_ZERO, data.Outputs());
         moments[i].resize(data.Outputs());
@@ -91,14 +101,17 @@ Gamma::Gamma(const Data& d, uint p, uint num_m)
 
     kdTree kdtree(data, 16);
 
-    for (uint i = 0; i < data.Size(); i++) {
+    for (uint i = 0; i < data.Size(); ++i)
+    {
         Nearest nn(data[i], kdtree, pmax);
         const std::vector<near_points*>& neighbours = nn.neighbours();
 
-        for (uint m = 0; m < num_moments; m++) {
+        for (uint m = 0; m < num_moments; ++m)
+        {
             if ((m + moments_MIN) % 2 != 0) continue;
 
-            for (uint j = 0; j < pmax; j++) {
+            for (uint j = 0; j < pmax; ++j)
+            {
                 //				original delta = (x_i - x_N[i,p])^k
                 //	   		delta[m][j] += Dissim(Raise(neighbours[j]->distance,m+moments_MIN)); // sqrt the squared distances
 
@@ -106,9 +119,11 @@ Gamma::Gamma(const Data& d, uint p, uint num_m)
                 //            else delta[m][j] += Dissim(neighbours[j]->distance);
                 const vect_uint& nn_index_list = neighbours[j]->index_list;
 
-                for (uint k = 0; k < data.Outputs(); k++) {
+                for (uint k = 0; k < data.Outputs(); ++k)
+                {
                     valarray_fp local_gamma(fp_ZERO, pmax);
-                    for (uint l = 0; l < nn_index_list.size(); l++) {
+                    for (uint l = 0; l < nn_index_list.size(); l++)
+                    {
                         const valarray_fp& output1 = data[nn_index_list[l]].Output_Vector();
                         const valarray_fp& output2 = data[i].Output_Vector();
                         local_gamma[j] += Distance(output1[k], output2[k], m + moments_MIN);
@@ -120,16 +135,31 @@ Gamma::Gamma(const Data& d, uint p, uint num_m)
         }
     }
 
-    for (uint m = 0; m < num_moments; m++) {
-        if ((m + moments_MIN) % 2 != 0) continue;
+    for (uint m = 0; m < num_moments; ++m)
+    {
+        if ((m + moments_MIN) % 2 != 0)
+        {
+            continue;
+        }
         delta[m] /= data.Size();
-        for (uint i = 0; i < data.Outputs(); i++) gamma[m][i] /= data.Size();
-        for (uint i = 0; i < data.Outputs(); i++) r[m][i] = Linear_Regression(delta[m], gamma[m][i]);
+
+        for (uint i = 0; i < data.Outputs(); ++i)
+        {
+            gamma[m][i] /= data.Size();
+        }
+
+        for (uint i = 0; i < data.Outputs(); ++i)
+        {
+            r[m][i] = Linear_Regression(delta[m], gamma[m][i]);
+        }
     }
 
-    for (uint m = 0; m < num_moments; m++) {
-        for (uint i = 0; i < data.Outputs(); i++) {
-            switch (m + moments_MIN) {
+    for (uint m = 0; m < num_moments; ++m)
+    {
+        for (uint i = 0; i < data.Outputs(); ++i)
+        {
+            switch (m + moments_MIN)
+            {
             default:
                 break;
 
@@ -220,7 +250,8 @@ std::ostream& operator<<(std::ostream& os, const Gamma& g)
     //      os << "num points, G2, G4, G6, G8, G10, M2, M4, M6, M8, M10,";
     //   os << endl;
 
-    for (uint i = 0; i < g.data.Outputs(); i++) {
+    for (uint i = 0; i < g.data.Outputs(); ++i)
+    {
         os << g.data.Size() << ", ";
 
         if (g.high_moments >= 2) os << g.r[0][i].intercept << ", ";

@@ -127,35 +127,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Base\makestring.h" />
-    <ClInclude Include="..\Base\message.h" />
-    <ClInclude Include="..\Base\universal.h" />
-    <ClInclude Include="..\Data\data.h" />
-    <ClInclude Include="..\Data\iovector.h" />
-    <ClInclude Include="..\Data\rawdata.h" />
-    <ClInclude Include="..\Data\transform.h" />
+    <ClInclude Include="..\Gamma\data.h" />
     <ClInclude Include="..\Gamma\gamma.h" />
+    <ClInclude Include="..\Gamma\iovector.h" />
+    <ClInclude Include="..\Gamma\kdtree.h" />
+    <ClInclude Include="..\Gamma\makestring.h" />
+    <ClInclude Include="..\Gamma\mask.h" />
+    <ClInclude Include="..\Gamma\nearest.h" />
+    <ClInclude Include="..\Gamma\rawdata.h" />
     <ClInclude Include="..\Gamma\results.h" />
-    <ClInclude Include="..\kdTree\kdtree.h" />
-    <ClInclude Include="..\Mask\mask.h" />
-    <ClInclude Include="..\Nearest\nearest.h" />
+    <ClInclude Include="..\Gamma\transform.h" />
+    <ClInclude Include="..\Gamma\universal.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Base\message.cpp" />
-    <ClCompile Include="..\Base\universal.cpp" />
-    <ClCompile Include="..\Data\data.cpp" />
-    <ClCompile Include="..\Data\iovector.cpp" />
-    <ClCompile Include="..\Data\rawdata.cpp" />
-    <ClCompile Include="..\Data\transform.cpp" />
+    <ClCompile Include="..\Gamma\data.cpp" />
     <ClCompile Include="..\Gamma\gamma.cpp" />
+    <ClCompile Include="..\Gamma\iovector.cpp" />
+    <ClCompile Include="..\Gamma\kdtree.cpp" />
+    <ClCompile Include="..\Gamma\mask.cpp" />
+    <ClCompile Include="..\Gamma\nearest.cpp" />
+    <ClCompile Include="..\Gamma\rawdata.cpp" />
     <ClCompile Include="..\Gamma\results.cpp" />
-    <ClCompile Include="..\kdTree\kdtree.cpp" />
-    <ClCompile Include="..\Mask\mask.cpp" />
-    <ClCompile Include="..\Nearest\nearest.cpp" />
+    <ClCompile Include="..\Gamma\transform.cpp" />
+    <ClCompile Include="..\Gamma\universal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

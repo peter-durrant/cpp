@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Data/data.h"
+#include "data.h"
 
 extern const uint moments_MIN;
 extern const uint moments_MAX;

@@ -2,30 +2,30 @@
 #include "iovector.h"
 
 IOVector::IOVector() :
-    input(EMPTY), output(EMPTY)
+    input(0), output(0)
 {}
 
-IOVector::IOVector(uint in, uint out) :
+IOVector::IOVector(uint32_t in, uint32_t out) :
     input(in), output(out)
 {}
 
-uint IOVector::Inputs() const
+uint32_t IOVector::Inputs() const
 {
     return input.size();
 }
 
-uint IOVector::Outputs() const
+uint32_t IOVector::Outputs() const
 {
     return output.size();
 }
 
-void IOVector::Resize(uint in, uint out)
+void IOVector::Resize(uint32_t in, uint32_t out)
 {
     input.resize(in);
     output.resize(out);
 }
 
-valarray_fp& IOVector :: operator[](const uint index)
+valarray_fp& IOVector :: operator[](const uint32_t index)
 {
     if (index > 1)
     {
@@ -45,7 +45,7 @@ const valarray_fp& IOVector::Input_Vector() const
     return input;
 }
 
-fp IOVector::Input_Vector(uint index) const
+double IOVector::Input_Vector(uint32_t index) const
 {
     if (index > input.size())
     {
@@ -54,7 +54,7 @@ fp IOVector::Input_Vector(uint index) const
     return input[index];
 }
 
-fp& IOVector::Input_Vector(uint index)
+double& IOVector::Input_Vector(uint32_t index)
 {
     if (index > input.size())
     {
@@ -73,7 +73,7 @@ valarray_fp& IOVector::Output_Vector()
     return output;
 }
 
-fp IOVector::Output_Vector(uint index) const
+double IOVector::Output_Vector(uint32_t index) const
 {
     if (index > output.size())
     {
@@ -84,14 +84,14 @@ fp IOVector::Output_Vector(uint index) const
 
 std::ostream& operator<<(std::ostream& os, const IOVector& iov)
 {
-    for (uint i = 0; i < iov.input.size(); ++i)
+    for (uint32_t i = 0; i < iov.input.size(); ++i)
     {
         os << iov.input[i] << " ";
     }
 
     os << " , ";
 
-    for (uint i = 0; i < iov.output.size(); ++i)
+    for (uint32_t i = 0; i < iov.output.size(); ++i)
     {
         os << iov.output[i] << " ";
     }

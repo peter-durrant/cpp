@@ -16,7 +16,7 @@ Data::Data(const RawData& rd, const std::vector<FormatType>& ft) :
     CreateData();
 }
 
-Data::Data(const Data& d, uint sv, uint ev) :
+Data::Data(const Data& d, uint32_t sv, uint32_t ev) :
     raw_data(d.raw_data), transform(d.transform), data(0), input_mask(transform.Inputs())
 {
     // vector indexes [0..M-1]
@@ -25,8 +25,8 @@ Data::Data(const Data& d, uint sv, uint ev) :
         throw std::runtime_error("Invalid data copy");
     }
     data.resize(ev - sv + 1);
-    uint j = 0;
-    for (uint i = sv; i <= ev; ++i)
+    uint32_t j = 0;
+    for (uint32_t i = sv; i <= ev; ++i)
     {
         data[j] = d.data[i];
         ++j;
@@ -37,7 +37,7 @@ Data::Data(const Data& d, const Mask& m) :
     raw_data(d.raw_data), transform(d.transform), data(0), input_mask(m)
 {
     IOVector new_vector(input_mask.Length(), d.Outputs());
-    for (uint i = 0; i < d.Size(); ++i)
+    for (uint32_t i = 0; i < d.Size(); ++i)
     {
         Masked(d[i], new_vector);
         data.push_back(new_vector);
@@ -46,10 +46,10 @@ Data::Data(const Data& d, const Mask& m) :
 
 void Data::CreateData()
 {
-    uint start_vector = 0;
-    uint end_vector = 0;
+    uint32_t start_vector = 0;
+    uint32_t end_vector = 0;
 
-    for (uint i = 0; i < transform.Series(); ++i)
+    for (uint32_t i = 0; i < transform.Series(); ++i)
     {
         if (transform[i].inputs > start_vector)
         {
@@ -74,31 +74,31 @@ void Data::CreateData()
         throw std::runtime_error("Unable to perform transformation, transformation failed");
     }
 
-    //	const uint num_vectors = end_vector - start_vector + 1;
+    //	const uint32_t num_vectors = end_vector - start_vector + 1;
 
-    const uint __IN = 0;
-    const uint __OUT = 1;
+    const uint32_t __IN = 0;
+    const uint32_t __OUT = 1;
     IOVector row(transform.Inputs(), transform.Outputs());
 
-    for (uint i = start_vector; i <= end_vector; ++i)
+    for (uint32_t i = start_vector; i <= end_vector; ++i)
     {
-        uint in_index = 0;
-        uint out_index = 0;
+        uint32_t in_index = 0;
+        uint32_t out_index = 0;
 
-        for (uint j = 0; j < raw_data.Series(); ++j)
+        for (uint32_t j = 0; j < raw_data.Series(); ++j)
         {
-            for (uint k = 0; k < transform[j].inputs; ++k)
+            for (uint32_t k = 0; k < transform[j].inputs; ++k)
             {
                 row[__IN][in_index++] = raw_data[i + k - transform[j].inputs + 1][j];
             }
 
-            uint offset = 0;
+            uint32_t offset = 0;
             if (transform[j].type == TS)
             {
                 offset = 1;
             }
 
-            for (uint k = 0; k < transform[j].outputs; ++k)
+            for (uint32_t k = 0; k < transform[j].outputs; ++k)
             {
                 row[__OUT][out_index++] = raw_data[i + k + offset][j];
             }
@@ -107,12 +107,12 @@ void Data::CreateData()
     }
 }
 
-uint Data::Size() const
+uint32_t Data::Size() const
 {
     return data.size();
 }
 
-uint Data::Inputs() const
+uint32_t Data::Inputs() const
 {
     if (data.size() > 0)
     {
@@ -121,7 +121,7 @@ uint Data::Inputs() const
     throw std::runtime_error("Invalid data set");
 }
 
-uint Data::Outputs() const
+uint32_t Data::Outputs() const
 {
     if (data.size() > 0)
     {
@@ -132,8 +132,8 @@ uint Data::Outputs() const
 
 void Data::Masked(const IOVector& source, IOVector& dest)
 {
-    uint j = 0;
-    for (uint i = 0; i < input_mask.Size(); ++i)
+    uint32_t j = 0;
+    for (uint32_t i = 0; i < input_mask.Size(); ++i)
     {
         if (input_mask[i] == true)
         {
@@ -144,7 +144,7 @@ void Data::Masked(const IOVector& source, IOVector& dest)
     dest.Output_Vector() = source.Output_Vector();
 }
 
-const IOVector& Data :: operator[](uint index) const
+const IOVector& Data :: operator[](uint32_t index) const
 {
     return data[index];
 }
@@ -156,10 +156,10 @@ std::ostream& operator<<(std::ostream& os, const Data& d)
         throw std::runtime_error("Invalid stream");
     }
 
-    //	const uint __IN = 0;
-    //	const uint __OUT = 1;
+    //	const uint32_t __IN = 0;
+    //	const uint32_t __OUT = 1;
 
-    for (uint i = 0; i < d.data.size(); ++i)
+    for (uint32_t i = 0; i < d.data.size(); ++i)
     {
         os << d.data[i];
         os << std::endl;

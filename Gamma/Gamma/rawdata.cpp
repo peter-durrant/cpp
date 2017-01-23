@@ -1,6 +1,7 @@
-#include <fstream>
 #include "rawdata.h"
 #include "makestring.h"
+#include <fstream>
+#include <iostream>
 
 using hdd::utility::MS;
 
@@ -8,7 +9,7 @@ RawData::RawData() :
     data(0), inputs(0), outputs(0)
 {}
 
-RawData::RawData(uint in, uint out) :
+RawData::RawData(uint32_t in, uint32_t out) :
     data(0), inputs(in), outputs(out)
 {}
 
@@ -23,12 +24,12 @@ RawData::RawData(const std::string& fn) :
 
     Determine_File_Format(ifs);
 
-    uint num_vectors = 1;
-    uint num_count = 0;
-    uint num_expected = inputs + outputs;
-    fp number;
+    uint32_t num_vectors = 1;
+    uint32_t num_count = 0;
+    uint32_t num_expected = inputs + outputs;
+    double number;
 
-    std::vector<fp> number_array(num_expected);
+    std::vector<double> number_array(num_expected);
 
     while (!ifs.eof())
     {
@@ -84,8 +85,8 @@ RawData::RawData(const std::string& fn) :
     ifs.close();
 
     /*	ofstream ofs("out.txt");
-        for (uint i = 0; i < num_vectors; i++) {
-            for (uint j = 0; j < num_expected; j++) {
+        for (uint32_t i = 0; i < num_vectors; i++) {
+            for (uint32_t j = 0; j < num_expected; j++) {
                 ofs << data[i][j] << " ";
             }
             ofs << endl;
@@ -98,14 +99,14 @@ RawData::RawData(const std::string& fn) :
 
 void RawData::Determine_File_Format(std::ifstream& ifs)
 {
-    fp number;
-    uint num_count = 0;
-    uint num_found = 0;
-    std::vector<fp> number_array;
+    double number;
+    uint32_t num_count = 0;
+    uint32_t num_found = 0;
+    std::vector<double> number_array;
 
     //	use the commas to determine the file format
-    std::vector<uint> comma_pos;
-    uint comma_count = 0;
+    std::vector<uint32_t> comma_pos;
+    uint32_t comma_count = 0;
 
     while (!ifs.eof() && num_found == 0)
     {
@@ -169,27 +170,27 @@ void RawData::Determine_File_Format(std::ifstream& ifs)
     data.push_back(number_array);
 }
 
-uint RawData::Inputs() const
+uint32_t RawData::Inputs() const
 {
     return inputs;
 }
 
-uint RawData::Outputs() const
+uint32_t RawData::Outputs() const
 {
     return outputs;
 }
 
-uint RawData::Vectors() const
+uint32_t RawData::Vectors() const
 {
     return data.size();
 }
 
-uint RawData::Series() const
+uint32_t RawData::Series() const
 {
     return (inputs + outputs);
 }
 
-const std::vector<fp>& RawData :: operator[](uint index) const
+const std::vector<double>& RawData :: operator[](uint32_t index) const
 {
     return data[index];
 }

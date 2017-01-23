@@ -6,20 +6,20 @@ typedef std::vector<bool> Mask_Type;
 
 class Mask
 {
-private:
-    Mask_Type mask;
-
 public:
-    Mask(const uint num_in);
+    Mask(const uint32_t num_in);
     Mask(const Mask& m);
 
-    uint Size();
-    uint Length();
+    uint32_t Size();
+    uint32_t Length();
     bool Empty();
     void Decrement();
     void Set_Mask(const Mask& m);
     void Set_Mask(const std::string& m);
 
-    const bool operator[](uint index) const;
+    const bool operator[](uint32_t index) const;
     friend std::ostream& operator<<(std::ostream& os, const Mask& m);
+
+private:
+    Mask_Type mask;
 };

@@ -1,6 +1,6 @@
 #include "mask.h"
 
-Mask::Mask(const uint num_in) :
+Mask::Mask(const uint32_t num_in) :
     mask(num_in, true)
 {}
 
@@ -8,15 +8,15 @@ Mask::Mask(const Mask& m) :
     mask(m.mask)
 {}
 
-uint Mask::Size()
+uint32_t Mask::Size()
 {
     return mask.size();
 }
 
-uint Mask::Length()
+uint32_t Mask::Length()
 {
-    uint length = 0;
-    for (uint i = 0; i < mask.size(); ++i)
+    uint32_t length = 0;
+    for (uint32_t i = 0; i < mask.size(); ++i)
     {
         if (mask[i])
         {
@@ -28,7 +28,7 @@ uint Mask::Length()
 
 bool Mask::Empty()
 {
-    for (uint i = 0; i < mask.size(); ++i)
+    for (uint32_t i = 0; i < mask.size(); ++i)
     {
         if (mask[i]) return false;
     }
@@ -37,12 +37,12 @@ bool Mask::Empty()
 
 void Mask::Decrement()
 {
-    for (uint i = 0; i < mask.size(); ++i)
+    for (uint32_t i = 0; i < mask.size(); ++i)
     {
         if (mask[i] == true)
         {
             mask[i] = false;
-            for (uint j = i; j > 0; --j)
+            for (uint32_t j = i; j > 0; --j)
             {
                 mask[j - 1] = true;
             }
@@ -59,7 +59,7 @@ void Mask::Set_Mask(const Mask& m)
 void Mask::Set_Mask(const std::string& m)
 {
     mask.resize(m.size());
-    for (uint i = 0; i < m.size(); i++)
+    for (uint32_t i = 0; i < m.size(); i++)
     {
         if (m[i] == '0')
         {
@@ -72,7 +72,7 @@ void Mask::Set_Mask(const std::string& m)
     }
 }
 
-const bool Mask :: operator[](uint index) const
+const bool Mask :: operator[](uint32_t index) const
 {
     return mask[index];
 }

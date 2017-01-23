@@ -6,8 +6,8 @@
 //class Gamma_Result
 //{
 //public:
-//    const uint pmax;
-//    const uint high_moments;
+//    const uint32_t pmax;
+//    const uint32_t high_moments;
 //    std::vector<valarray_fp> delta;
 //    std::vector<std::vector<valarray_fp>> gamma;
 //    std::vector<std::vector<Regression>> r;

@@ -2,15 +2,11 @@
 
 #include "data.h"
 
-extern const uint moments_MIN;
-extern const uint moments_MAX;
-extern const uint default_moments;
-
 struct Regression
 {
-    fp intercept;
-    fp gradient;
-    fp standard_error;
+    double intercept;
+    double gradient;
+    double standard_error;
 
     friend std::ostream& operator<<(std::ostream& os, const Regression& r);
 };
@@ -19,17 +15,18 @@ Regression Linear_Regression(const valarray_fp& x, const valarray_fp& y);
 
 class Gamma
 {
+public:
+    Gamma(const Data& d, uint32_t p, uint32_t num_m = DefaultMoments());
+    friend std::ostream& operator<<(std::ostream& os, const Gamma& g);
+    static constexpr uint32_t DefaultMoments() { return 2; }
+
 private:
     const Data& data;
-    const uint pmax;
-    const uint high_moments;
+    const uint32_t pmax;
+    const uint32_t high_moments;
 
     std::vector<valarray_fp> delta;
-    std::vector<std::vector<valarray_fp> > gamma;
-    std::vector<std::vector<Regression> > r;
+    std::vector<std::vector<valarray_fp>> gamma;
+    std::vector<std::vector<Regression>> r;
     std::vector<valarray_fp> moments;
-
-public:
-    Gamma(const Data& d, uint p, uint num_m = default_moments);
-    friend std::ostream& operator<<(std::ostream& os, const Gamma& g);
 };

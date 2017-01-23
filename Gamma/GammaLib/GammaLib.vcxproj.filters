@@ -80,9 +80,6 @@
     <ClCompile Include="..\Gamma\transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Gamma\universal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Gamma\nearest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -1,15 +1,13 @@
 #include "gamma.h"
 
-#include "universal.h"
 #include "nearest.h"
 #include "kdtree.h"
 #include "makestring.h"
 
 using hdd::utility::MS;
 
-const uint moments_MIN = 2;
-const uint moments_MAX = 10;
-const uint default_moments = 2;
+const uint32_t moments_MIN = 2;
+const uint32_t moments_MAX = 10;
 
 std::ostream& operator<<(std::ostream& os, const Regression& r)
 {
@@ -21,24 +19,24 @@ std::ostream& operator<<(std::ostream& os, const Regression& r)
 
 Regression Linear_Regression(const valarray_fp& x, const valarray_fp& y)
 {
-    fp diffx;
-    fp diffy;
-    fp Mx = 0;
-    fp My = 0;
-    fp Qx = 0;
-    fp Qy = 0;
-    fp Qxy = 0;
-    fp xbar;
-    fp ybar;
-    fp sx;
-    fp sy;
-    const uint num_near = x.size();
-    const fp num_near_fp = num_near;
+    double diffx;
+    double diffy;
+    double Mx = 0;
+    double My = 0;
+    double Qx = 0;
+    double Qy = 0;
+    double Qxy = 0;
+    double xbar;
+    double ybar;
+    double sx;
+    double sy;
+    const uint32_t num_near = x.size();
+    const double num_near_fp = num_near;
 
-    for (uint i = 1; i <= num_near; ++i)
+    for (uint32_t i = 1; i <= num_near; ++i)
     {
-        const uint j = i - 1;
-        const fp i_fp = i;
+        const uint32_t j = i - 1;
+        const double i_fp = i;
         diffx = x[j] - Mx;
         diffy = y[j] - My;
         Mx = ((i_fp - 1) * Mx + x[j]) / i_fp;
@@ -70,7 +68,7 @@ Regression Linear_Regression(const valarray_fp& x, const valarray_fp& y)
     return regression;
 }
 
-Gamma::Gamma(const Data& d, uint p, uint num_m) :
+Gamma::Gamma(const Data& d, uint32_t p, uint32_t num_m) :
     data(d), pmax(p), high_moments(num_m)
 {
     if (high_moments > moments_MAX || high_moments < moments_MIN)
@@ -78,64 +76,64 @@ Gamma::Gamma(const Data& d, uint p, uint num_m) :
         throw std::runtime_error(MS() << "Invalid number of moments " << high_moments);
     }
 
-    const uint num_moments = high_moments - moments_MIN + 1;
+    const uint32_t num_moments = high_moments - moments_MIN + 1;
     delta.resize(num_moments);
     gamma.resize(num_moments);
     r.resize(num_moments);
     moments.resize(num_moments);
 
-    for (uint i = 0; i < num_moments; ++i)
+    for (uint32_t i = 0; i < num_moments; ++i)
     {
-        //      delta[i] = valarray_fp(fp_ZERO, pmax);
+        //      delta[i] = valarray_fp(0, pmax);
         delta[i].resize(pmax);
         gamma[i].resize(data.Outputs());
-        //   	for (uint j = 0; j < data.Outputs(); j++) gamma[i][j] = valarray_fp(fp_ZERO, pmax);
-        for (uint j = 0; j < data.Outputs(); j++)
+        //   	for (uint32_t j = 0; j < data.Outputs(); j++) gamma[i][j] = valarray_fp(0, pmax);
+        for (uint32_t j = 0; j < data.Outputs(); j++)
         {
             gamma[i][j].resize(pmax);
         }
         r[i].resize(data.Outputs());
-        //      moments[i] = valarray_fp(fp_ZERO, data.Outputs());
+        //      moments[i] = valarray_fp(0, data.Outputs());
         moments[i].resize(data.Outputs());
     }
 
     kdTree kdtree(data, 16);
 
-    for (uint i = 0; i < data.Size(); ++i)
+    for (uint32_t i = 0; i < data.Size(); ++i)
     {
         Nearest nn(data[i], kdtree, pmax);
         const std::vector<near_points*>& neighbours = nn.neighbours();
 
-        for (uint m = 0; m < num_moments; ++m)
+        for (uint32_t m = 0; m < num_moments; ++m)
         {
             if ((m + moments_MIN) % 2 != 0) continue;
 
-            for (uint j = 0; j < pmax; ++j)
+            for (uint32_t j = 0; j < pmax; ++j)
             {
                 //				original delta = (x_i - x_N[i,p])^k
                 //	   		delta[m][j] += Dissim(Raise(neighbours[j]->distance,m+moments_MIN)); // sqrt the squared distances
 
                 delta[m][j] += neighbours[j]->distance;
                 //            else delta[m][j] += Dissim(neighbours[j]->distance);
-                const vect_uint& nn_index_list = neighbours[j]->index_list;
+                const std::vector<uint32_t>& nn_index_list = neighbours[j]->index_list;
 
-                for (uint k = 0; k < data.Outputs(); ++k)
+                for (uint32_t k = 0; k < data.Outputs(); ++k)
                 {
-                    valarray_fp local_gamma(fp_ZERO, pmax);
-                    for (uint l = 0; l < nn_index_list.size(); l++)
+                    valarray_fp local_gamma(0.0, pmax);
+                    for (uint32_t l = 0; l < nn_index_list.size(); l++)
                     {
                         const valarray_fp& output1 = data[nn_index_list[l]].Output_Vector();
                         const valarray_fp& output2 = data[i].Output_Vector();
                         local_gamma[j] += Distance(output1[k], output2[k], m + moments_MIN);
                     }
-                    gamma[m][k] += local_gamma / (fp)nn_index_list.size();
+                    gamma[m][k] += local_gamma / (double)nn_index_list.size();
                 }
             }
 
         }
     }
 
-    for (uint m = 0; m < num_moments; ++m)
+    for (uint32_t m = 0; m < num_moments; ++m)
     {
         if ((m + moments_MIN) % 2 != 0)
         {
@@ -143,20 +141,20 @@ Gamma::Gamma(const Data& d, uint p, uint num_m) :
         }
         delta[m] /= data.Size();
 
-        for (uint i = 0; i < data.Outputs(); ++i)
+        for (uint32_t i = 0; i < data.Outputs(); ++i)
         {
             gamma[m][i] /= data.Size();
         }
 
-        for (uint i = 0; i < data.Outputs(); ++i)
+        for (uint32_t i = 0; i < data.Outputs(); ++i)
         {
             r[m][i] = Linear_Regression(delta[m], gamma[m][i]);
         }
     }
 
-    for (uint m = 0; m < num_moments; ++m)
+    for (uint32_t m = 0; m < num_moments; ++m)
     {
-        for (uint i = 0; i < data.Outputs(); ++i)
+        for (uint32_t i = 0; i < data.Outputs(); ++i)
         {
             switch (m + moments_MIN)
             {
@@ -168,7 +166,7 @@ Gamma::Gamma(const Data& d, uint p, uint num_m) :
                 break;
 
             case 4:
-                moments[m][i] = (r[m][i].intercept - 6 * Raise(moments[m - 2][i], 2)) / 2;
+                moments[m][i] = (r[m][i].intercept - 6 * pow(moments[m - 2][i], 2)) / 2;
                 break;
 
             case 6:
@@ -176,7 +174,7 @@ Gamma::Gamma(const Data& d, uint p, uint num_m) :
                 break;
 
             case 8:
-                moments[m][i] = (r[m][i].intercept - 70 * Raise(moments[m - 4][i], 2) - 56 * moments[m - 6][i] * moments[m - 2][i]) / 2;
+                moments[m][i] = (r[m][i].intercept - 70 * pow(moments[m - 4][i], 2) - 56 * moments[m - 6][i] * moments[m - 2][i]) / 2;
                 break;
 
             case 10:
@@ -190,46 +188,46 @@ Gamma::Gamma(const Data& d, uint p, uint num_m) :
 /*
 ostream& operator<<(ostream& os, const Gamma& g)
 {
-   const uint num_moments = g.high_moments - moments_MIN + 1;
-   for (uint m = 0; m < num_moments; m++) {
+   const uint32_t num_moments = g.high_moments - moments_MIN + 1;
+   for (uint32_t m = 0; m < num_moments; m++) {
       if ((m + moments_MIN) % 2 == 0) {
          os << "moment " << (m + moments_MIN);
          os << endl;
-//      	for (uint i = 0; i < g.pmax; i++) {
+//      	for (uint32_t i = 0; i < g.pmax; i++) {
 //	      	os << "delta[" << (i+1) << "] = " << g.delta[m][i] << endl;
-//		      for (uint j = 0; j < g.data.Outputs(); j++) {
+//		      for (uint32_t j = 0; j < g.data.Outputs(); j++) {
 //      			os << "output[" << (j+1) << "] -> " << "gamma[" << (i+1) << "] = " << g.gamma[m][j][i] << endl;
 //            }
 //         }
-         for (uint i = 0; i < g.data.Outputs(); i++) {
+         for (uint32_t i = 0; i < g.data.Outputs(); i++) {
             os << "Output: " << i;
             if (i < g.data.Outputs()-1) os << ", ";
             else os << endl;
          }
 
          os << "Moment: ";
-         for (uint i = 0; i < g.data.Outputs(); i++) {
+         for (uint32_t i = 0; i < g.data.Outputs(); i++) {
             os << g.moments[m][i];
             if (i < g.data.Outputs()-1) os << ", ";
             else os << endl;
          }
 
          os << "Intercept: ";
-         for (uint i = 0; i < g.data.Outputs(); i++) {
+         for (uint32_t i = 0; i < g.data.Outputs(); i++) {
             os << g.r[m][i].intercept;
             if (i < g.data.Outputs()-1) os << ", ";
             else os << endl;
          }
 
          os << "Gradient: ";
-         for (uint i = 0; i < g.data.Outputs(); i++) {
+         for (uint32_t i = 0; i < g.data.Outputs(); i++) {
             os << g.r[m][i].gradient;
             if (i < g.data.Outputs()-1) os << ", ";
             else os << endl;
          }
 
          os << "Standard error: ";
-         for (uint i = 0; i < g.data.Outputs(); i++) {
+         for (uint32_t i = 0; i < g.data.Outputs(); i++) {
             os << g.r[m][i].standard_error;
             if (i < g.data.Outputs()-1) os << ", ";
             else os << endl;
@@ -244,13 +242,13 @@ ostream& operator<<(ostream& os, const Gamma& g)
 
 std::ostream& operator<<(std::ostream& os, const Gamma& g)
 {
-    //   const uint num_moments = g.high_moments - moments_MIN + 1;
+    //   const uint32_t num_moments = g.high_moments - moments_MIN + 1;
 
-    //   for (uint i = 0; i < g.data.Outputs(); i++)
+    //   for (uint32_t i = 0; i < g.data.Outputs(); i++)
     //      os << "num points, G2, G4, G6, G8, G10, M2, M4, M6, M8, M10,";
     //   os << endl;
 
-    for (uint i = 0; i < g.data.Outputs(); ++i)
+    for (uint32_t i = 0; i < g.data.Outputs(); ++i)
     {
         os << g.data.Size() << ", ";
 

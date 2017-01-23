@@ -1,26 +1,26 @@
 #pragma once
 
-#include "universal.h"
+#include <vector>
 
 class RawData
 {
-private:
-    std::string filename;
-    std::vector<std::vector<fp> > data;
-	uint inputs;
-	uint outputs;
-
-	void Determine_File_Format(std::ifstream& ifs);
-
 public:
 	RawData();
-	RawData(uint in, uint out);
+	RawData(uint32_t in, uint32_t out);
 	RawData(const std::string& fn);
 
-	uint Inputs() const;
-	uint Outputs() const;
-	uint Vectors() const;
-	uint Series() const;
+	uint32_t Inputs() const;
+	uint32_t Outputs() const;
+	uint32_t Vectors() const;
+	uint32_t Series() const;
 
-	const std::vector<fp>& operator[](uint index) const;
+	const std::vector<double>& operator[](uint32_t index) const;
+
+private:
+    std::string filename;
+    std::vector<std::vector<double>> data;
+    uint32_t inputs;
+    uint32_t outputs;
+
+    void Determine_File_Format(std::ifstream& ifs);
 };

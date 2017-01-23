@@ -1,10 +1,11 @@
 #include "transform.h"
+#include <iostream>
 
 FormatType::FormatType() :
     type(Undefined), inputs(0), outputs(0)
 {}
 
-FormatType::FormatType(Transformation_Type t, uint in, uint out) :
+FormatType::FormatType(Transformation_Type t, uint32_t in, uint32_t out) :
     type(t), inputs(in), outputs(out)
 {}
 
@@ -19,7 +20,7 @@ Transform::Transform(const RawData& rd) :
     FormatType ft;
     if (raw_data.Outputs() == 0)
     {
-        for (uint i = 0; i < raw_data.Inputs(); ++i)
+        for (uint32_t i = 0; i < raw_data.Inputs(); ++i)
         {
             ft.type = TS;
             ft.inputs = 0;
@@ -29,14 +30,14 @@ Transform::Transform(const RawData& rd) :
     }
     else
     {
-        for (uint i = 0; i < raw_data.Inputs(); ++i)
+        for (uint32_t i = 0; i < raw_data.Inputs(); ++i)
         {
             ft.type = Input;
             ft.inputs = 1;
             ft.outputs = 0;
             format.push_back(ft);
         }
-        for (uint i = 0; i < raw_data.Outputs(); ++i)
+        for (uint32_t i = 0; i < raw_data.Outputs(); ++i)
         {
             ft.type = Output;
             ft.inputs = 0;
@@ -47,7 +48,7 @@ Transform::Transform(const RawData& rd) :
 
     Set_Data_Format();
 
-    for (uint i = 0; i < format.size(); ++i)
+    for (uint32_t i = 0; i < format.size(); ++i)
     {
         inputs += format[i].inputs;
         outputs += format[i].outputs;
@@ -67,7 +68,7 @@ Transform::Transform(const RawData& rd, const std::vector<FormatType>& ft)
         throw std::runtime_error("Unable to perform transformation, invalid data format");
     }
 
-    for (uint i = 0; i < format.size(); ++i)
+    for (uint32_t i = 0; i < format.size(); ++i)
     {
         inputs += format[i].inputs;
         outputs += format[i].outputs;
@@ -83,7 +84,7 @@ void Transform::Set_Data_Format()
 {
     if (!Summarise_All())
     {
-        for (uint i = 0; i < raw_data.Inputs() + raw_data.Outputs(); ++i)
+        for (uint32_t i = 0; i < raw_data.Inputs() + raw_data.Outputs(); ++i)
         {
             std::cout << std::endl << std::endl << "-------------------------------" << std::endl;
             Summarise(i);
@@ -95,7 +96,7 @@ void Transform::Set_Data_Format()
 bool Transform::Summarise_All()
 {
     std::cout << std::endl;
-    for (uint i = 0; i < format.size(); ++i)
+    for (uint32_t i = 0; i < format.size(); ++i)
     {
         Summarise(i);
     }
@@ -110,7 +111,7 @@ bool Transform::Summarise_All()
     return false;
 }
 
-void Transform::Summarise(uint variable)
+void Transform::Summarise(uint32_t variable)
 {
     std::cout << "Series " << (variable + 1) << ": ";
     switch (format[variable].type)
@@ -142,7 +143,7 @@ FormatType Transform::Choose()
     std::cout << "  3. Time Series (Input)" << std::endl;
     std::cout << "  4. Time Series" << std::endl;
 
-    uint choice = 0;
+    uint32_t choice = 0;
     while (choice < 1 || choice > 4)
     {
         std::cout << std::endl << "Enter choice [1..4]" << std::endl;
@@ -183,22 +184,22 @@ FormatType Transform::Choose()
     return ft;
 }
 
-uint Transform::Inputs() const
+uint32_t Transform::Inputs() const
 {
     return inputs;
 }
 
-uint Transform::Outputs() const
+uint32_t Transform::Outputs() const
 {
     return outputs;
 }
 
-uint Transform::Series() const
+uint32_t Transform::Series() const
 {
     return raw_data.Series();
 }
 
-const FormatType& Transform :: operator[](const uint index) const
+const FormatType& Transform :: operator[](const uint32_t index) const
 {
     if (index > format.size())
     {

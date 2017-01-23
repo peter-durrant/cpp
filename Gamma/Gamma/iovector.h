@@ -1,34 +1,28 @@
 #pragma once
 
-//class IOVectorExcept : public ExceptionBase {};
-//
-//class BadOperator : public IOVectorExcept
-//{
-//public:
-//	BadOperator();
-//};
+#include "universal.h"
 
 class IOVector
 {
+public:
+    IOVector();
+    IOVector(uint32_t in, uint32_t out);
+    uint32_t Inputs() const;
+    uint32_t Outputs() const;
+    valarray_fp& operator[](const uint32_t index);
+
+    void Resize(uint32_t in, uint32_t out);
+
+    const valarray_fp& Input_Vector() const;
+    double Input_Vector(uint32_t index) const;
+    double& Input_Vector(uint32_t index);
+    const valarray_fp& Output_Vector() const;
+    valarray_fp& Output_Vector();
+    double Output_Vector(uint32_t index) const;
+
+    friend std::ostream& operator<<(std::ostream& os, const IOVector& iov);
+
 private:
     valarray_fp input;
     valarray_fp output;
-
-public:
-    IOVector();
-    IOVector(uint in, uint out);
-    uint Inputs() const;
-    uint Outputs() const;
-    valarray_fp& operator[](const uint index);
-
-    void Resize(uint in, uint out);
-
-    const valarray_fp& Input_Vector() const;
-    fp Input_Vector(uint index) const;
-    fp& Input_Vector(uint index);
-    const valarray_fp& Output_Vector() const;
-    valarray_fp& Output_Vector();
-    fp Output_Vector(uint index) const;
-
-    friend std::ostream& operator<<(std::ostream& os, const IOVector& iov);
 };

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "gtest/gtest.h"
-#include "../Gamma/universal.h"
 
 namespace GammaLibTest
 {

@@ -8,6 +8,8 @@
 #include "../Gamma/gamma.h"
 #include <iostream>
 
+using namespace hdd::gamma;
+
 int main()
 {
     RawData rawdata("Z:\\GitHub\\cpp\\Gamma\\Application\\Hen1000.asc");

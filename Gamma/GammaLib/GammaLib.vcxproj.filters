@@ -48,10 +48,10 @@
     <ClInclude Include="..\Gamma\transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Gamma\universal.h">
+    <ClInclude Include="..\Gamma\nearest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Gamma\nearest.h">
+    <ClInclude Include="..\Gamma\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

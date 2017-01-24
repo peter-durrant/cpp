@@ -9,11 +9,11 @@ namespace hdd::gamma
         std::vector<uint32_t> index_list;
         uint32_t partition_key;
         uint32_t median;
-        /*const*/ Node* left;
-        /*const*/ Node* right;
+        Node* left;
+        Node* right;
 
-        Node(valarray_uint& il);	// terminal Node
-        Node(uint32_t p, uint32_t m, /*const*/ Node* l, /*const*/ Node* r); // non-terminal Node
+        Node(valarray_uint& il); // terminal Node
+        Node(uint32_t p, uint32_t m, Node* l, Node* r); // non-terminal Node
 
         bool Terminal() const;
 

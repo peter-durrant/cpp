@@ -38,7 +38,7 @@ namespace hdd::gamma
         Delete_Tree(&tree);
     }
 
-    void KdTree::Delete_Tree(Node** cn)
+    void KdTree::Delete_Tree(Node ** cn)
     {
         Node* current_node = *cn;
 

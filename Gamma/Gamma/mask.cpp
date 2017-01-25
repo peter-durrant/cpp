@@ -76,7 +76,7 @@ namespace hdd::gamma
         }
     }
 
-    const bool Mask :: operator[](uint32_t index) const
+    const bool Mask::operator[](uint32_t index) const
     {
         return mask[index];
     }

@@ -202,7 +202,7 @@ namespace hdd::gamma
            } */
     }
 
-    /*bool Nearest :: Ball_Within_Bounds()
+    /*bool Nearest::Ball_Within_Bounds()
     {
        for (uint32_t d = 0; d < kdtree.Dimension(); d++) {
           if (Distance(query_point.Input_Vector()[d], lower_bound[d]) <= furthest_distance*furthest_distance ||

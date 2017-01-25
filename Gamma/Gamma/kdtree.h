@@ -44,7 +44,6 @@ namespace hdd::gamma
         uint32_t Median(uint32_t partition_key, valarray_uint& index_list);
         void Calc_Spread(valarray_fp &spread_list, const valarray_uint& index_list);
         uint32_t Calc_Max_Spread(const valarray_fp &spread);
-        void Swap(uint32_t& num1, uint32_t& num2);
         valarray_uint Left_Sub_Set(uint32_t median_index, const valarray_uint& index_list);
         valarray_uint Right_Sub_Set(uint32_t median_index, const valarray_uint& index_list);
         Node* Make_Non_Terminal_Node(uint32_t partition_key, uint32_t median, Node* left, Node* right);

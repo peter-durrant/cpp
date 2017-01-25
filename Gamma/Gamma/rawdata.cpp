@@ -193,7 +193,7 @@ namespace hdd::gamma
         return (inputs + outputs);
     }
 
-    const std::vector<double>& RawData :: operator[](uint32_t index) const
+    const std::vector<double>& RawData::operator[](uint32_t index) const
     {
         return data[index];
     }

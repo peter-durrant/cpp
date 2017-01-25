@@ -21,6 +21,9 @@ namespace hdd::gamma
         const IOVector& operator[](uint32_t index) const;
         friend std::ostream& operator<<(std::ostream& os, const Data& d);
 
+
+        const std::vector<IOVector>& Get() const;
+
     private:
         const RawData& raw_data;
         Transform transform;

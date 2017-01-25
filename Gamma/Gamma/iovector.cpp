@@ -29,7 +29,7 @@ namespace hdd::gamma
         output.resize(out);
     }
 
-    valarray_fp& IOVector :: operator[](const uint32_t index)
+    valarray_fp& IOVector::operator[](const uint32_t index)
     {
         if (index > 1)
         {

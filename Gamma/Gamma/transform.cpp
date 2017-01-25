@@ -202,7 +202,7 @@ namespace hdd::gamma
         return raw_data.Series();
     }
 
-    const FormatType& Transform :: operator[](const uint32_t index) const
+    const FormatType& Transform::operator[](const uint32_t index) const
     {
         if (index > format.size())
         {

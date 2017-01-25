@@ -1,6 +1,7 @@
 #include "kdtree.h"
 
 #include <sstream>
+#include <algorithm>
 
 namespace hdd::gamma
 {
@@ -83,82 +84,11 @@ namespace hdd::gamma
 
     uint32_t KdTree::Median(uint32_t partition_key, valarray_uint& index_list)
     {
-        uint32_t median_index = index_list.size() / 2;
-
-        uint32_t l = 1;
-        uint32_t ir = index_list.size();
-        uint32_t mid;
-
-        for (;;)
-        {
-            if (ir <= l + 1)
-            {
-                if (ir == l + 1 && data[index_list[ir - 1]].Input_Vector(partition_key) < data[index_list[l - 1]].Input_Vector(partition_key))
-                {
-                    Swap(index_list[l - 1], index_list[ir - 1]);
-                }
-                return median_index - 1;
-            }
-            else
-            {
-                mid = (l + ir) >> 1;
-                Swap(index_list[mid - 1], index_list[l]);
-                if (data[index_list[l - 1]].Input_Vector(partition_key) > data[index_list[ir - 1]].Input_Vector(partition_key))
-                {
-                    Swap(index_list[l - 1], index_list[ir - 1]);
-                }
-                if (data[index_list[l]].Input_Vector(partition_key) > data[index_list[ir - 1]].Input_Vector(partition_key))
-                {
-                    Swap(index_list[l], index_list[ir - 1]);
-                }
-                if (data[index_list[l - 1]].Input_Vector(partition_key) > data[index_list[l]].Input_Vector(partition_key))
-                {
-                    Swap(index_list[l - 1], index_list[l]);
-                }
-
-                uint32_t i = l + 1;
-                uint32_t j = ir;
-                uint32_t a = l + 1;
-                uint32_t temp_a = index_list[a - 1];
-                for (;;)
-                {
-                    do
-                    {
-                        i++;
-                    } while (data[index_list[i - 1]].Input_Vector(partition_key) < data[index_list[a - 1]].Input_Vector(partition_key));
-
-                    do
-                    {
-                        j--;
-                    } while (data[index_list[j - 1]].Input_Vector(partition_key) > data[index_list[a - 1]].Input_Vector(partition_key));
-
-                    if (j < i)
-                    {
-                        break;
-                    }
-
-                    Swap(index_list[i - 1], index_list[j - 1]);
-                }
-
-                index_list[l] = index_list[j - 1];
-                index_list[j - 1] = temp_a;
-                if (j >= median_index)
-                {
-                    ir = j - 1;
-                }
-                if (j <= median_index)
-                {
-                    l = i;
-                }
-            }
-        }
-    }
-
-    void KdTree::Swap(uint32_t& num1, uint32_t& num2)
-    {
-        uint32_t temp = num1;
-        num1 = num2;
-        num2 = temp;
+        auto d = data.Get();
+        auto lambda = [=](const uint32_t index1, const uint32_t index2) { return d[index1].Input_Vector(partition_key) < d[index2].Input_Vector(partition_key); };
+        std::nth_element(std::begin(index_list), std::begin(index_list) + index_list.size() / 2, std::end(index_list), lambda);
+        auto medianIndex = index_list.size() / 2;
+        return medianIndex;
     }
 
     void KdTree::Calc_Spread(valarray_fp &spread_list, const valarray_uint& index_list)
@@ -228,7 +158,7 @@ namespace hdd::gamma
         return data.Inputs();
     }
 
-    const IOVector& KdTree :: operator[](uint32_t index) const
+    const IOVector& KdTree::operator[](uint32_t index) const
     {
         return data[index];
     }

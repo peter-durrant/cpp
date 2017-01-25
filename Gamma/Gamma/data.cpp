@@ -148,7 +148,12 @@ namespace hdd::gamma
         dest.Output_Vector() = source.Output_Vector();
     }
 
-    const IOVector& Data :: operator[](uint32_t index) const
+    const std::vector<IOVector>& Data::Get() const
+    {
+        return data;
+    }
+
+    const IOVector& Data::operator[](uint32_t index) const
     {
         return data[index];
     }

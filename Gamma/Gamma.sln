@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "..\Application\Application.vcxproj", "{2B812E1C-A830-4F13-A58E-2AB4233A5D36}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "Application\Application.vcxproj", "{2B812E1C-A830-4F13-A58E-2AB4233A5D36}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GammaLib", "..\GammaLib\GammaLib.vcxproj", "{352D0298-CEAF-4236-AA40-BE64D601E1A9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GammaLib", "GammaLib\GammaLib.vcxproj", "{352D0298-CEAF-4236-AA40-BE64D601E1A9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GammaLibGoogleTest", "..\GammaLibGoogleTest\GammaLibGoogleTest.vcxproj", "{2B9AE553-687E-4EB0-8DA6-1A56AC7D795E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GammaLibGoogleTest", "GammaLibGoogleTest\GammaLibGoogleTest.vcxproj", "{2B9AE553-687E-4EB0-8DA6-1A56AC7D795E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,10 +2,10 @@
 //
 
 #include "stdafx.h"
-#include "../Gamma/rawdata.h"
-#include "../Gamma/data.h"
-#include "../Gamma/transform.h"
-#include "../Gamma/gamma.h"
+#include "rawdata.h"
+#include "data.h"
+#include "transform.h"
+#include "gamma.h"
 #include <iostream>
 
 using namespace hdd::gamma;

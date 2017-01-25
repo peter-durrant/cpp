@@ -77,6 +77,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -89,6 +90,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,6 +105,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,6 +122,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,29 +131,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Gamma\data.h" />
-    <ClInclude Include="..\Gamma\gamma.h" />
-    <ClInclude Include="..\Gamma\iovector.h" />
-    <ClInclude Include="..\Gamma\kdtree.h" />
-    <ClInclude Include="..\Gamma\makestring.h" />
-    <ClInclude Include="..\Gamma\mask.h" />
-    <ClInclude Include="..\Gamma\nearest.h" />
-    <ClInclude Include="..\Gamma\rawdata.h" />
-    <ClInclude Include="..\Gamma\results.h" />
-    <ClInclude Include="..\Gamma\transform.h" />
-    <ClInclude Include="..\Gamma\types.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="include\data.h" />
+    <ClInclude Include="include\gamma.h" />
+    <ClInclude Include="include\iovector.h" />
+    <ClInclude Include="include\kdtree.h" />
+    <ClInclude Include="include\makestring.h" />
+    <ClInclude Include="include\mask.h" />
+    <ClInclude Include="include\nearest.h" />
+    <ClInclude Include="include\rawdata.h" />
+    <ClInclude Include="include\results.h" />
+    <ClInclude Include="include\transform.h" />
+    <ClInclude Include="include\types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Gamma\data.cpp" />
-    <ClCompile Include="..\Gamma\gamma.cpp" />
-    <ClCompile Include="..\Gamma\iovector.cpp" />
-    <ClCompile Include="..\Gamma\kdtree.cpp" />
-    <ClCompile Include="..\Gamma\mask.cpp" />
-    <ClCompile Include="..\Gamma\nearest.cpp" />
-    <ClCompile Include="..\Gamma\rawdata.cpp" />
-    <ClCompile Include="..\Gamma\results.cpp" />
-    <ClCompile Include="..\Gamma\transform.cpp" />
+    <ClCompile Include="src\data.cpp" />
+    <ClCompile Include="src\gamma.cpp" />
+    <ClCompile Include="src\iovector.cpp" />
+    <ClCompile Include="src\kdtree.cpp" />
+    <ClCompile Include="src\mask.cpp" />
+    <ClCompile Include="src\nearest.cpp" />
+    <ClCompile Include="src\rawdata.cpp" />
+    <ClCompile Include="src\results.cpp" />
+    <ClCompile Include="src\transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

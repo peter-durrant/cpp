@@ -9,16 +9,16 @@ using hdd::utility::MS;
 const uint32_t moments_MIN = 2;
 const uint32_t moments_MAX = 10;
 
-std::ostream& operator<<(std::ostream& os, const hdd::gamma::Regression& r)
-{
-    os << "     Intercept = " << r.intercept << std::endl;
-    os << "      Gradient = " << r.gradient << std::endl;
-    os << "Standard error = " << r.standard_error << std::endl;
-    return os;
-}
-
 namespace hdd::gamma
 {
+    std::ostream& operator<<(std::ostream& os, const hdd::gamma::Regression& r)
+    {
+        os << "     Intercept = " << r.intercept << std::endl;
+        os << "      Gradient = " << r.gradient << std::endl;
+        os << "Standard error = " << r.standard_error << std::endl;
+        return os;
+    }
+
     Regression Linear_Regression(const valarray_fp& x, const valarray_fp& y)
     {
         double diffx;

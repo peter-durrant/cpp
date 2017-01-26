@@ -7,9 +7,7 @@ namespace hdd::gamma
     class RawData
     {
     public:
-        RawData();
-        RawData(uint32_t in, uint32_t out);
-        RawData(const std::string& fn);
+        RawData(const std::string& filename);
 
         uint32_t Inputs() const;
         uint32_t Outputs() const;
@@ -19,11 +17,10 @@ namespace hdd::gamma
         const std::vector<double>& operator[](uint32_t index) const;
 
     private:
-        std::string filename;
-        std::vector<std::vector<double>> data;
-        uint32_t inputs;
-        uint32_t outputs;
+        std::vector<std::vector<double>> data_;
+        uint32_t inputs_;
+        uint32_t outputs_;
 
-        void Determine_File_Format(std::ifstream& ifs);
+        void ReadFirstLineAndDetectFileFormat(std::ifstream& inputStream);
     };
 }

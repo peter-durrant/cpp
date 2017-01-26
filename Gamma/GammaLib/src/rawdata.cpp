@@ -8,84 +8,74 @@ using hdd::utility::MS;
 
 namespace hdd::gamma
 {
-    RawData::RawData() :
-        data(0), inputs(0), outputs(0)
-    {}
-
-    RawData::RawData(uint32_t in, uint32_t out) :
-        data(0), inputs(in), outputs(out)
-    {}
-
-    RawData::RawData(const std::string& fn) :
-        filename(fn)
+    RawData::RawData(const std::string& filename)
     {
-        std::ifstream ifs(filename.c_str());
-        if (!ifs)
+        std::ifstream inputStream(filename);
+        if (!inputStream)
         {
             throw std::runtime_error(MS() << "Unable to open file: " << filename);
         }
 
-        Determine_File_Format(ifs);
+        ReadFirstLineAndDetectFileFormat(inputStream);
 
-        uint32_t num_vectors = 1;
-        uint32_t num_count = 0;
-        uint32_t num_expected = inputs + outputs;
-        double number;
+        uint32_t numberRowsRead = data_.size();
+        uint32_t numberCount = 0;
+        const uint32_t expectedCountNumbersFoundOnLine = inputs_ + outputs_;
 
-        std::vector<double> number_array(num_expected);
+        std::vector<double> numbersFoundOnLine(expectedCountNumbersFoundOnLine);
 
-        while (!ifs.eof())
+        while (!inputStream.eof())
         {
-            ifs >> number;
+            double number;
+            inputStream >> number;
 
-            if (!ifs.eof())
+            if (!inputStream.eof())
             {
-                if (ifs.fail())
+                if (inputStream.fail())
                 {
-                    throw std::runtime_error(MS() << "Bad character(s) found on line " << num_vectors + 1 << " in file: " << filename);
+                    throw std::runtime_error(MS() << "Bad character(s) found on line " << numberRowsRead + 1);
                 }
-                else
+
+                ++numberCount;
+                if (numberCount > expectedCountNumbersFoundOnLine)
                 {
-                    ++num_count;
-                    if (num_count > num_expected)
+                    throw std::runtime_error(MS() << "Invalid data format found on line " << numberRowsRead + 1);
+                }
+                numbersFoundOnLine[numberCount - 1] = number;
+                char c;
+                inputStream.get(c);
+                while (c == ',' || c == ' ' || c == '\r' || c == '\n')
+                {
+                    if (c == '\r' || c == '\n')
                     {
-                        throw std::runtime_error(MS() << "Invalid data format found on line " << num_vectors + 1 << " in file: " << filename);
+                        if (expectedCountNumbersFoundOnLine != numberCount && numberCount != 0)
+                        {
+                            throw std::runtime_error(MS() << "Invalid data format found on line " << numberRowsRead + 1);
+                        }
+
+                        if (numberCount != 0)
+                        {
+                            ++numberRowsRead;
+                            data_.push_back(numbersFoundOnLine);
+                        }
+                        numberCount = 0;
                     }
-                    number_array[num_count - 1] = number;
-                    char c;
-                    ifs.get(c);
-                    while (c == ',' || c == ' ' || c == '\r' || c == '\n')
+                    if (inputStream)
                     {
-                        if (c == '\r' || c == '\n')
-                        {
-                            if (num_expected != num_count && num_count != 0)
-                            {
-                                throw std::runtime_error(MS() << "Invalid data format found on line " << num_vectors + 1 << " in file: " << filename);
-                            }
-                            if (num_count != 0)
-                            {
-                                ++num_vectors;
-                                data.push_back(number_array);
-                            }
-                            num_count = 0;
-                        }
-                        if (ifs)
-                        {
-                            ifs.get(c);
-                        }
-                        else
-                        {
-                            c = '\0';
-                        }
+                        inputStream.get(c);
                     }
-                    if (ifs)
+                    else
                     {
-                        ifs.putback(c);
+                        c = '\0';
                     }
+                }
+                if (inputStream)
+                {
+                    inputStream.putback(c);
                 }
             }
         }
-        ifs.close();
+        inputStream.close();
 
         /*	ofstream ofs("out.txt");
             for (uint32_t i = 0; i < num_vectors; i++) {
@@ -95,106 +85,109 @@ namespace hdd::gamma
                 ofs << endl;
             }
             ofs.close(); */
-        std::cout << "Values expected on each line: " << num_expected << std::endl;
-        std::cout << "Inputs: " << inputs << ", outputs: " << outputs << std::endl;
-        std::cout << "Number of vectors: " << num_vectors << std::endl;
+        std::cout << "Values expected on each line: " << expectedCountNumbersFoundOnLine << std::endl;
+        std::cout << "Inputs: " << inputs_ << ", outputs: " << outputs_ << std::endl;
+        std::cout << "Number of vectors: " << numberRowsRead << std::endl;
     }
 
-    void RawData::Determine_File_Format(std::ifstream& ifs)
+    void RawData::ReadFirstLineAndDetectFileFormat(std::ifstream& inputStream)
     {
-        double number;
-        uint32_t num_count = 0;
-        uint32_t num_found = 0;
-        std::vector<double> number_array;
+        uint32_t numberCount = 0;
+        uint32_t countNumbersFoundOnLine = 0;
+        std::vector<double> numbersFoundOnLine;
 
         //	use the commas to determine the file format
-        std::vector<uint32_t> comma_pos;
-        uint32_t comma_count = 0;
+        std::vector<uint32_t> commaPosition;
 
-        while (!ifs.eof() && num_found == 0)
+        // find the first line in the file that starts with at least 1 number
+        // commas are expected to separate input and output values
+        //        in1 in2 in3, out1 out2
+        // a second comma is ignored
+        while (!inputStream.eof() && countNumbersFoundOnLine == 0)
         {
-            ifs >> number;
+            // try to read a number
+            double number;
+            inputStream >> number;
 
-            if (!ifs.eof())
+            if (!inputStream.eof())
             {
-                if (ifs.fail())
+                if (inputStream.fail())
                 {
-                    throw std::runtime_error(MS() << "Bad character(s) found on line " << 1 << " in file: " << filename);
+                    throw std::runtime_error(MS() << "Bad character(s) found on line " << 1);
                 }
-                else
+
+                // store the read number
+                numbersFoundOnLine.push_back(number);
+                ++numberCount;
+                char c;
+                inputStream.get(c);
+                while (c == ',' || c == ' ' || c == '\r' || c == '\n')
                 {
-                    number_array.push_back(number);
-                    ++num_count;
-                    char c;
-                    ifs.get(c);
-                    while (c == ',' || c == ' ' || c == '\r' || c == '\n')
+                    // at the end of line and some numbers read then store the numbers found on the line
+                    if (c == '\r' || c == '\n' && countNumbersFoundOnLine == 0 && numberCount != 0)
                     {
-                        if (c == '\r' || c == '\n' && num_found == 0 && num_count != 0)
-                        {
-                            num_found = num_count;
-                        }
-
-                        if (c == ',')
-                        {
-                            ++comma_count;
-                            comma_pos.push_back(num_count);
-                        }
-
-                        if (ifs)
-                        {
-                            ifs.get(c);
-                        }
-                        else
-                        {
-                            c = '\0';
-                        }
+                        countNumbersFoundOnLine = numberCount;
                     }
-                    if (ifs)
+
+                    if (c == ',')
                     {
-                        ifs.putback(c);
+                        commaPosition.push_back(numberCount);
                     }
+
+                    if (inputStream)
+                    {
+                        inputStream.get(c);
+                    }
+                    else
+                    {
+                        c = '\0';
+                    }
+                }
+                if (inputStream)
+                {
+                    inputStream.putback(c);
                 }
             }
         }
 
         //	determine file structure from commas
-        if (comma_count == 1 || comma_count == 2)
+        if (commaPosition.size() == 1 || commaPosition.size() == 2)
         {
-            inputs = comma_pos[0];
-            outputs = num_count - inputs;
+            inputs_ = commaPosition[0];
+            outputs_ = numberCount - inputs_;
         }
         else
         {
-            inputs = num_found;
-            outputs = 0;
+            inputs_ = countNumbersFoundOnLine;
+            outputs_ = 0;
         }
 
         //	construct data
-        data.push_back(number_array);
+        data_.push_back(numbersFoundOnLine);
     }
 
     uint32_t RawData::Inputs() const
     {
-        return inputs;
+        return inputs_;
     }
 
     uint32_t RawData::Outputs() const
     {
-        return outputs;
+        return outputs_;
     }
 
     uint32_t RawData::Vectors() const
     {
-        return data.size();
+        return data_.size();
     }
 
     uint32_t RawData::Series() const
     {
-        return (inputs + outputs);
+        return (inputs_ + outputs_);
     }
 
     const std::vector<double>& RawData::operator[](uint32_t index) const
     {
-        return data[index];
+        return data_[index];
     }
 }

@@ -4,132 +4,130 @@
 
 namespace hdd::gamma
 {
-    Data::Data(const RawData& rd) :
-        raw_data(rd), transform(rd), data(0), input_mask(transform.Inputs())
+    Data::Data(const RawData& rawData) :
+        rawData_(rawData), transform_(rawData), data_(0), inputMask_(transform_.Inputs())
     {
         CreateData();
     }
 
-    Data::Data(const RawData& rd, const std::vector<FormatType>& ft) :
-        raw_data(rd), transform(rd, ft), data(0), input_mask(transform.Inputs())
+    Data::Data(const RawData& rawData, const std::vector<FormatType>& columnType) :
+        rawData_(rawData), transform_(rawData, columnType), data_(0), inputMask_(transform_.Inputs())
     {
-        if (rd.Series() != ft.size())
+        if (rawData.Series() != columnType.size())
         {
             throw std::runtime_error("Unable to perform transformation, transformation failed");
         }
         CreateData();
     }
 
-    Data::Data(const Data& d, uint32_t sv, uint32_t ev) :
-        raw_data(d.raw_data), transform(d.transform), data(0), input_mask(transform.Inputs())
+    Data::Data(const Data& data, uint32_t startIndex, uint32_t endIndex) :
+        rawData_(data.rawData_), transform_(data.transform_), data_(0), inputMask_(transform_.Inputs())
     {
         // vector indexes [0..M-1]
-        if (sv > ev || sv >= d.Size() || ev >= d.Size())
+        if (startIndex > endIndex || startIndex >= data.Size() || endIndex >= data.Size())
         {
             throw std::runtime_error("Invalid data copy");
         }
-        data.resize(ev - sv + 1);
-        uint32_t j = 0;
-        for (uint32_t i = sv; i <= ev; ++i)
+        data_.resize(endIndex - startIndex + 1);
+        uint32_t newIndex = 0;
+        for (uint32_t originalIndex = startIndex; originalIndex <= endIndex; ++originalIndex)
         {
-            data[j] = d.data[i];
-            ++j;
+            data_[newIndex] = data.data_[originalIndex];
+            ++newIndex;
         }
     }
 
-    Data::Data(const Data& d, const Mask& m) :
-        raw_data(d.raw_data), transform(d.transform), data(0), input_mask(m)
+    Data::Data(const Data& data, const Mask& inputMask) :
+        rawData_(data.rawData_), transform_(data.transform_), data_(0), inputMask_(inputMask)
     {
-        IOVector new_vector(input_mask.Length(), d.Outputs());
-        for (uint32_t i = 0; i < d.Size(); ++i)
+        IOVector maskedDataVector(inputMask_.Length(), data.Outputs());
+        for (uint32_t i = 0; i < data.Size(); ++i)
         {
-            Masked(d[i], new_vector);
-            data.push_back(new_vector);
+            Masked(data[i], maskedDataVector);
+            data_.push_back(maskedDataVector);
         }
     }
 
     void Data::CreateData()
     {
-        uint32_t start_vector = 0;
-        uint32_t end_vector = 0;
+        uint32_t startIndex = 0;
+        uint32_t endIndex = 0;
 
-        for (uint32_t i = 0; i < transform.Series(); ++i)
+        for (uint32_t i = 0; i < transform_.Series(); ++i)
         {
-            if (transform[i].inputs > start_vector)
+            if (transform_[i].inputs > startIndex)
             {
-                start_vector = transform[i].inputs;
+                startIndex = transform_[i].inputs;
             }
 
-            if (transform[i].outputs > end_vector)
+            if (transform_[i].outputs > endIndex)
             {
-                end_vector = transform[i].outputs;
-                if (transform[i].type == TS)
+                endIndex = transform_[i].outputs;
+                if (transform_[i].type == TS)
                 {
-                    ++end_vector;
+                    ++endIndex;
                 }
             }
         }
 
-        --start_vector;
-        end_vector = raw_data.Vectors() - end_vector;
+        --startIndex;
+        endIndex = rawData_.Vectors() - endIndex;
 
-        if (end_vector <= start_vector)
+        if (endIndex <= startIndex)
         {
             throw std::runtime_error("Unable to perform transformation, transformation failed");
         }
 
-        //	const uint32_t num_vectors = end_vector - start_vector + 1;
+        const uint32_t In = 0;
+        const uint32_t Out = 1;
+        IOVector row(transform_.Inputs(), transform_.Outputs());
 
-        const uint32_t __IN = 0;
-        const uint32_t __OUT = 1;
-        IOVector row(transform.Inputs(), transform.Outputs());
-
-        for (uint32_t i = start_vector; i <= end_vector; ++i)
+        for (uint32_t index = startIndex; index <= endIndex; ++index)
         {
-            uint32_t in_index = 0;
-            uint32_t out_index = 0;
+            uint32_t inputIndex = 0;
+            uint32_t outputIndex = 0;
 
-            for (uint32_t j = 0; j < raw_data.Series(); ++j)
+            for (uint32_t j = 0; j < rawData_.Series(); ++j)
             {
-                for (uint32_t k = 0; k < transform[j].inputs; ++k)
+                for (uint32_t k = 0; k < transform_[j].inputs; ++k)
                 {
-                    row[__IN][in_index++] = raw_data[i + k - transform[j].inputs + 1][j];
+                    row[In][inputIndex++] = rawData_[index + k - transform_[j].inputs + 1][j];
                 }
 
                 uint32_t offset = 0;
-                if (transform[j].type == TS)
+                if (transform_[j].type == TS)
                 {
                     offset = 1;
                 }
 
-                for (uint32_t k = 0; k < transform[j].outputs; ++k)
+                for (uint32_t k = 0; k < transform_[j].outputs; ++k)
                 {
-                    row[__OUT][out_index++] = raw_data[i + k + offset][j];
+                    row[Out][outputIndex++] = rawData_[index + k + offset][j];
                 }
             }
-            data.push_back(row);
+            data_.push_back(row);
         }
     }
 
     uint32_t Data::Size() const
     {
-        return data.size();
+        return data_.size();
     }
 
     uint32_t Data::Inputs() const
     {
-        if (data.size() > 0)
+        if (data_.size() > 0)
         {
-            return data[0].Inputs();
+            return data_[0].Inputs();
         }
         throw std::runtime_error("Invalid data set");
     }
 
     uint32_t Data::Outputs() const
     {
-        if (data.size() > 0)
+        if (data_.size() > 0)
         {
-            return data[0].Outputs();
+            return data_[0].Outputs();
         }
         throw std::runtime_error("Invalid data set");
     }
@@ -137,9 +135,9 @@ namespace hdd::gamma
     void Data::Masked(const IOVector& source, IOVector& dest)
     {
         uint32_t j = 0;
-        for (uint32_t i = 0; i < input_mask.Size(); ++i)
+        for (uint32_t i = 0; i < inputMask_.Size(); ++i)
         {
-            if (input_mask[i] == true)
+            if (inputMask_[i] == true)
             {
                 dest.Input_Vector(j) = source.Input_Vector(i);
                 ++j;
@@ -150,22 +148,19 @@ namespace hdd::gamma
 
     const IOVector& Data::operator[](uint32_t index) const
     {
-        return data[index];
+        return data_[index];
     }
 
-    std::ostream& operator<<(std::ostream& os, const Data& d)
+    std::ostream& operator<<(std::ostream& os, const Data& data)
     {
         if (!os)
         {
             throw std::runtime_error("Invalid stream");
         }
 
-        //	const uint32_t __IN = 0;
-        //	const uint32_t __OUT = 1;
-
-        for (uint32_t i = 0; i < d.data.size(); ++i)
+        for (uint32_t i = 0; i < data.data_.size(); ++i)
         {
-            os << d.data[i];
+            os << data.data_[i];
             os << std::endl;
         }
         return os;

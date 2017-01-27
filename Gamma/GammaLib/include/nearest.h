@@ -4,48 +4,47 @@
 
 namespace hdd::gamma
 {
-    struct near_points
+    struct NearPoints
     {
-        double distance;
-        std::vector<uint32_t> index_list;
+        double distance_;
+        std::vector<uint32_t> indexList_;
 
-        near_points();
-        near_points(double d, uint32_t i);
-        near_points(double d, const std::vector<uint32_t>& il);
+        NearPoints();
+        NearPoints(double distance, uint32_t i);
+        NearPoints(double distance, const std::vector<uint32_t>& indexList);
 
-        friend std::ostream& operator<<(std::ostream& os, const near_points& n);
+        friend std::ostream& operator<<(std::ostream& os, const NearPoints& nearPoints);
     };
 
-    double Distance(const IOVector& X1, const IOVector& X2, uint32_t power = 2);
-    double Distance(const valarray_fp& x1, const valarray_fp& x2, uint32_t power = 2);
-    double Distance(double x1, double x2, uint32_t power = 2);
-    double Dissim(double x);
+    double Distance(const IOVector& vector1, const IOVector& vector2, uint32_t power = 2);
+    double Distance(const valarray_fp& vector1, const valarray_fp& vector2, uint32_t power = 2);
+    double Distance(double vector1, double vector2, uint32_t power = 2);
 
     class Nearest
     {
     public:
-        Nearest(uint32_t q, const KdTree& k, uint32_t p);
-        Nearest(const IOVector& q, const KdTree& k, uint32_t p);
-        ~Nearest();
-        const std::vector<near_points*>& neighbours() const;
-        const near_points& neighbours(uint32_t p) const;
-        friend std::ostream& operator<<(std::ostream& os, const Nearest& n);
+        Nearest(uint32_t queryPointIndex, const KdTree& kdTree, uint32_t pmax);
+        Nearest(const IOVector& queryPoint, const KdTree& kdTree, uint32_t pmax);
+        virtual ~Nearest();
+
+        const std::vector<NearPoints*>& neighbours() const;
+        const NearPoints& neighbours(uint32_t p) const;
+        friend std::ostream& operator<<(std::ostream& os, const Nearest& nearest);
 
     protected:
-        const IOVector& query_point;
-        const KdTree& kdtree;
-        const uint32_t pmax;
-        std::vector<near_points*> near_neighbours;
-        std::vector<uint32_t> zero_nn_list;
-        double furthest_distance;
+        const IOVector& queryPoint_;
+        const KdTree& kdtree_;
+        const uint32_t pmax_;
+        std::vector<NearPoints*> nearNeighbours_;
+        std::vector<uint32_t> zeroNearestNeighbourList_;
+        double furthestDistance_;
 
-        std::vector<double> upper_bound;
-        std::vector<double> lower_bound;
+        std::vector<double> upperBound_;
+        std::vector<double> lowerBound_;
 
-        void Add_Point(uint32_t index);
-        void Pre_Search();
+        void AddPoint(uint32_t index);
+        void PreSearch();
         void Search(const Node* root);
-        //   bool Ball_Within_Bounds();
-        bool Bounds_Overlap_Ball();
+        bool BoundsOverlapBall();
     };
 }

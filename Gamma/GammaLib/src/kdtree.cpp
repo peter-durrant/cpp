@@ -5,52 +5,52 @@
 
 namespace hdd::gamma
 {
-    Node::Node(valarray_uint& il) :
-        index_list(il.size()), partition_key(0), median(0), left(0), right(0)
+    Node::Node(const valarray_uint& indexList) :
+        indexList_(indexList.size()), partitionKey_(0), median_(0), left_(0), right_(0)
     {
-        for (uint32_t i = 0; i < index_list.size(); ++i)
+        for (uint32_t i = 0; i < indexList_.size(); ++i)
         {
-            index_list[i] = il[i];
+            indexList_[i] = indexList[i];
         }
     }
 
-    Node::Node(uint32_t p, uint32_t m, Node* l, Node* r) :
-        index_list(0), partition_key(p), median(m), left(l), right(r)
+    Node::Node(const uint32_t partitionKey, const uint32_t median, Node* left, Node* right) :
+        indexList_(0), partitionKey_(partitionKey), median_(median), left_(left), right_(right)
     {}
 
     bool Node::Terminal() const
     {
-        return !left;
+        return !left_;
     }
 
 
-    KdTree::KdTree(const Data& source, uint32_t bsize) :
-        data(source), bucketsize(bsize), index_list(data.Size()), tree(0)
+    KdTree::KdTree(const Data& source, const uint32_t bucketSize) :
+        data_(source), bucketsize_(bucketSize), indexList_(data_.Size()), tree_(0)
     {
-        for (uint32_t i = 0; i < index_list.size(); ++i)
+        for (uint32_t i = 0; i < indexList_.size(); ++i)
         {
-            index_list[i] = i;
+            indexList_[i] = i;
         }
-        tree = Build_Tree(index_list);
+        tree_ = BuildTree(indexList_);
     }
 
     KdTree::~KdTree()
     {
-        Delete_Tree(&tree);
+        DeleteTree(&tree_);
     }
 
-    void KdTree::Delete_Tree(Node ** cn)
+    void KdTree::DeleteTree(Node** cn)
     {
         Node* current_node = *cn;
 
-        if (current_node->left)
+        if (current_node->left_)
         {
-            Delete_Tree(&current_node->left);
+            DeleteTree(&current_node->left_);
         }
 
-        if (current_node->right)
+        if (current_node->right_)
         {
-            Delete_Tree(&current_node->right);
+            DeleteTree(&current_node->right_);
         }
 
         if (current_node)
@@ -61,58 +61,59 @@ namespace hdd::gamma
         *cn = 0;
     }
 
-    Node* KdTree::Build_Tree(valarray_uint& index_list)
+    Node* KdTree::BuildTree(valarray_uint& indexList)
     {
-        if (index_list.size() <= bucketsize)
+        if (indexList.size() <= bucketsize_)
         {
-            return Make_Terminal_Node(index_list);
+            return MakeTerminalNode(indexList);
         }
 
-        valarray_fp spread_list(0.0, data.Inputs()); // initialise spread to zero
-        Calc_Spread(spread_list, index_list);
-        const uint32_t partition_key = Calc_Max_Spread(spread_list);
-        uint32_t median_index = Median(partition_key, index_list);
+        const valarray_fp spreadList = CalculateSpread(indexList);
+        const uint32_t partitionKey = CalculateMaxSpread(spreadList);
+        const uint32_t medianIndex = Median(partitionKey, indexList);
 
-        valarray_uint leftss = Left_Sub_Set(median_index, index_list);
-        Node* left = Build_Tree(leftss);
-        valarray_uint rightss = Right_Sub_Set(median_index, index_list);
-        Node* right = Build_Tree(rightss);
-        return Make_Non_Terminal_Node(partition_key, index_list[median_index], left, right);
+        valarray_uint leftss = LeftSubSet(medianIndex, indexList);
+        Node* left = BuildTree(leftss);
+        valarray_uint rightss = RightSubSet(medianIndex, indexList);
+        Node* right = BuildTree(rightss);
+        return MakeNonTerminalNode(partitionKey, indexList[medianIndex], left, right);
 
         /*return Make_Non_Terminal_Node(partition_key, index_list[median_index], Build_Tree(Left_Sub_Set(median_index, index_list)), Build_Tree(Right_Sub_Set(median_index, index_list))); */
     }
 
-    uint32_t KdTree::Median(uint32_t partition_key, valarray_uint& index_list)
+    uint32_t KdTree::Median(const uint32_t partitionKey, valarray_uint& indexList) const
     {
-        auto lambda = [=](const uint32_t index1, const uint32_t index2) { return data[index1].Input_Vector(partition_key) < data[index2].Input_Vector(partition_key); };
-        std::nth_element(std::begin(index_list), std::begin(index_list) + index_list.size() / 2, std::end(index_list), lambda);
-        auto medianIndex = index_list.size() / 2;
+        auto lambda = [=](const uint32_t index1, const uint32_t index2) { return data_[index1].Input_Vector(partitionKey) < data_[index2].Input_Vector(partitionKey); };
+        std::nth_element(std::begin(indexList), std::begin(indexList) + indexList.size() / 2, std::end(indexList), lambda);
+        auto medianIndex = indexList.size() / 2;
         return medianIndex;
     }
 
-    void KdTree::Calc_Spread(valarray_fp &spread_list, const valarray_uint& index_list)
+    valarray_fp KdTree::CalculateSpread(const valarray_uint& indexList)
     {
-        valarray_fp min(std::numeric_limits<double>::max(), spread_list.size());
-        valarray_fp max(std::numeric_limits<double>::min(), spread_list.size());
+        valarray_fp spreadList(0.0, data_.Inputs()); // initialise spread to zero
+        valarray_fp min(std::numeric_limits<double>::max(), spreadList.size());
+        valarray_fp max(std::numeric_limits<double>::min(), spreadList.size());
 
-        for (uint32_t i = 0; i < index_list.size(); ++i)
+        for (uint32_t i = 0; i < indexList.size(); ++i)
         {
-            for (uint32_t j = 0; j < data.Inputs(); ++j)
+            for (uint32_t j = 0; j < data_.Inputs(); ++j)
             {
-                if (data[index_list[i]].Input_Vector(j) < min[j])
+                if (data_[indexList[i]].Input_Vector(j) < min[j])
                 {
-                    min[j] = data[index_list[i]].Input_Vector(j);
+                    min[j] = data_[indexList[i]].Input_Vector(j);
                 }
-                if (data[index_list[i]].Input_Vector(j) > max[j])
+                if (data_[indexList[i]].Input_Vector(j) > max[j])
                 {
-                    max[j] = data[index_list[i]].Input_Vector(j);
+                    max[j] = data_[indexList[i]].Input_Vector(j);
                 }
             }
         }
-        spread_list = max - min;
+        spreadList = max - min;
+        return spreadList;
     }
 
-    uint32_t KdTree::Calc_Max_Spread(const valarray_fp &spread)
+    uint32_t KdTree::CalculateMaxSpread(const valarray_fp &spread)
     {
         double maxspread = 0;
         uint32_t maxspreadIndex = 0;
@@ -127,68 +128,68 @@ namespace hdd::gamma
         return maxspreadIndex;
     }
 
-    valarray_uint KdTree::Left_Sub_Set(uint32_t median_index, const valarray_uint& index_list)
+    valarray_uint KdTree::LeftSubSet(const uint32_t medianIndex, const valarray_uint& indexList)
     {
-        return index_list[std::slice(0, median_index, 1)];
+        return indexList[std::slice(0, medianIndex, 1)];
     }
 
-    valarray_uint KdTree::Right_Sub_Set(uint32_t median_index, const valarray_uint& index_list)
+    valarray_uint KdTree::RightSubSet(const uint32_t medianIndex, const valarray_uint& indexList)
     {
-        return index_list[std::slice(median_index, index_list.size() - median_index, 1)];
+        return indexList[std::slice(medianIndex, indexList.size() - medianIndex, 1)];
     }
 
-    Node* KdTree::Make_Non_Terminal_Node(uint32_t partition_key, uint32_t median, /*const*/ Node* left, /*const*/ Node* right)
+    Node* KdTree::MakeNonTerminalNode(const uint32_t partitionKey, uint32_t median, /*const*/ Node* left, /*const*/ Node* right)
     {
-        return new Node(partition_key, median, left, right);
+        return new Node(partitionKey, median, left, right);
     }
 
-    Node* KdTree::Make_Terminal_Node(valarray_uint& index_list)
+    Node* KdTree::MakeTerminalNode(const valarray_uint& indexList)
     {
-        return new Node(index_list);
+        return new Node(indexList);
     }
 
     const Node* KdTree::Root() const
     {
-        return tree;
+        return tree_;
     }
 
     uint32_t KdTree::Dimension() const
     {
-        return data.Inputs();
+        return data_.Inputs();
     }
 
     const IOVector& KdTree::operator[](uint32_t index) const
     {
-        return data[index];
+        return data_[index];
     }
 
-    std::ostream& operator<<(std::ostream& os, const Node& n)
+    std::ostream& operator<<(std::ostream& os, const Node& node)
     {
-        if (n.left) // recursive
+        if (node.left_) // recursive
         {
-            os << *(n.left);
+            os << *(node.left_);
         }
 
-        if (n.right) // recursive
+        if (node.right_) // recursive
         {
-            os << *(n.right);
+            os << *(node.right_);
         }
 
-        if (!n.left || !n.right)
+        if (!node.left_ || !node.right_)
         {
-            os << "List size = " << n.index_list.size() << std::endl;
-            for (unsigned int i = 0; i < n.index_list.size(); ++i)
+            os << "List size = " << node.indexList_.size() << std::endl;
+            for (unsigned int i = 0; i < node.indexList_.size(); ++i)
             {
-                os << n.index_list[i] << std::endl;
+                os << node.indexList_[i] << std::endl;
             }
         }
 
         return os;
     }
 
-    std::ostream& operator<<(std::ostream& os, const KdTree& kd)
+    std::ostream& operator<<(std::ostream& os, const KdTree& kdTree)
     {
-        os << *(kd.Root()) << std::endl;
+        os << *(kdTree.Root()) << std::endl;
         return os;
     }
 }

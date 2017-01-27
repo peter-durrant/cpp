@@ -104,7 +104,7 @@ namespace hdd::gamma
         for (uint32_t i = 0; i < data.Size(); ++i)
         {
             Nearest nn(data[i], kdtree, pmax);
-            const std::vector<near_points*>& neighbours = nn.neighbours();
+            const std::vector<NearPoints*>& neighbours = nn.neighbours();
 
             for (uint32_t m = 0; m < num_moments; ++m)
             {
@@ -115,9 +115,9 @@ namespace hdd::gamma
                     //				original delta = (x_i - x_N[i,p])^k
                     //	   		delta[m][j] += Dissim(Raise(neighbours[j]->distance,m+moments_MIN)); // sqrt the squared distances
 
-                    delta[m][j] += neighbours[j]->distance;
+                    delta[m][j] += neighbours[j]->distance_;
                     //            else delta[m][j] += Dissim(neighbours[j]->distance);
-                    const std::vector<uint32_t>& nn_index_list = neighbours[j]->index_list;
+                    const std::vector<uint32_t>& nn_index_list = neighbours[j]->indexList_;
 
                     for (uint32_t k = 0; k < data.Outputs(); ++k)
                     {

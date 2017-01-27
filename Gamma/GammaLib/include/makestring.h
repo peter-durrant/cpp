@@ -13,7 +13,7 @@ namespace hdd::utility
         MakeString& operator=(const MakeString&) = delete;
         
         MakeString() {}
-		~MakeString() {}
+		virtual ~MakeString() {}
 
 		template<typename T>
 		MakeString& operator<<(const T& value)

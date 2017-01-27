@@ -6,18 +6,18 @@ namespace hdd::gamma
 {
     struct Node
     {
-        std::vector<uint32_t> index_list;
-        uint32_t partition_key;
-        uint32_t median;
-        Node* left;
-        Node* right;
+        std::vector<uint32_t> indexList_;
+        uint32_t partitionKey_;
+        uint32_t median_;
+        Node* left_;
+        Node* right_;
 
-        Node(valarray_uint& il); // terminal Node
-        Node(uint32_t p, uint32_t m, Node* l, Node* r); // non-terminal Node
+        Node(const valarray_uint& indexList); // terminal Node
+        Node(uint32_t partitionKey, uint32_t median, Node* left, Node* right); // non-terminal Node
 
         bool Terminal() const;
 
-        friend std::ostream& operator<<(std::ostream& os, const Node& n);
+        friend std::ostream& operator<<(std::ostream& os, const Node& node);
     };
 
 
@@ -25,29 +25,30 @@ namespace hdd::gamma
     class KdTree
     {
     public:
-        KdTree(const Data& source, uint32_t bsize);
-        ~KdTree();
+        KdTree(const Data& source, const uint32_t bucketSize);
+        virtual ~KdTree();
+
         const Node* Root() const;
         uint32_t Dimension() const;
 
         const IOVector& operator[](uint32_t index) const;
 
-        friend std::ostream& operator<<(std::ostream& os, const KdTree& kd);
+        friend std::ostream& operator<<(std::ostream& os, const KdTree& kdTree);
 
     private:
-        const Data& data;
-        const uint32_t bucketsize;
-        valarray_uint index_list;
-        Node* tree;
+        const Data& data_;
+        const uint32_t bucketsize_;
+        valarray_uint indexList_;
+        Node* tree_;
 
-        Node* Build_Tree(valarray_uint &index_list);
-        uint32_t Median(uint32_t partition_key, valarray_uint& index_list);
-        void Calc_Spread(valarray_fp &spread_list, const valarray_uint& index_list);
-        uint32_t Calc_Max_Spread(const valarray_fp &spread);
-        valarray_uint Left_Sub_Set(uint32_t median_index, const valarray_uint& index_list);
-        valarray_uint Right_Sub_Set(uint32_t median_index, const valarray_uint& index_list);
-        Node* Make_Non_Terminal_Node(uint32_t partition_key, uint32_t median, Node* left, Node* right);
-        Node* Make_Terminal_Node(valarray_uint& index_list);
-        void Delete_Tree(Node** cn);
+        Node* BuildTree(valarray_uint &indexList);
+        uint32_t Median(const uint32_t partition_key, valarray_uint& indexList) const;
+        valarray_fp CalculateSpread(const valarray_uint& indexList);
+        uint32_t CalculateMaxSpread(const valarray_fp& spread);
+        valarray_uint LeftSubSet(const uint32_t medianIndex, const valarray_uint& indexList);
+        valarray_uint RightSubSet(const uint32_t medianIndex, const valarray_uint& indexList);
+        Node* MakeNonTerminalNode(const uint32_t partitionKey, const uint32_t median, Node* left, Node* right);
+        Node* MakeTerminalNode(const valarray_uint& indexList);
+        void DeleteTree(Node** cn);
     };
 }

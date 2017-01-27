@@ -5,50 +5,53 @@
 namespace hdd::gamma
 {
     Mask::Mask(const uint32_t num_in) :
-        mask(num_in, true)
+        mask_(num_in, true)
     {}
 
     Mask::Mask(const Mask& m) :
-        mask(m.mask)
+        mask_(m.mask_)
     {}
 
-    uint32_t Mask::Size()
+    uint32_t Mask::Size() const
     {
-        return mask.size();
+        return mask_.size();
     }
 
-    uint32_t Mask::Length()
+    uint32_t Mask::Length() const
     {
         uint32_t length = 0;
-        for (uint32_t i = 0; i < mask.size(); ++i)
+        for (uint32_t i = 0; i < mask_.size(); ++i)
         {
-            if (mask[i])
+            if (mask_[i])
             {
-                length++;
+                ++length;
             }
         }
         return length;
     }
 
-    bool Mask::Empty()
+    bool Mask::IsEmpty() const
     {
-        for (uint32_t i = 0; i < mask.size(); ++i)
+        for (uint32_t i = 0; i < mask_.size(); ++i)
         {
-            if (mask[i]) return false;
+            if (mask_[i])
+            {
+                return false;
+            }
         }
         return true;
     }
 
     void Mask::Decrement()
     {
-        for (uint32_t i = 0; i < mask.size(); ++i)
+        for (uint32_t i = 0; i < mask_.size(); ++i)
         {
-            if (mask[i] == true)
+            if (mask_[i] == true)
             {
-                mask[i] = false;
+                mask_[i] = false;
                 for (uint32_t j = i; j > 0; --j)
                 {
-                    mask[j - 1] = true;
+                    mask_[j - 1] = true;
                 }
                 return;
             }
@@ -57,28 +60,28 @@ namespace hdd::gamma
 
     void Mask::Set_Mask(const Mask& m)
     {
-        mask = m.mask;
+        mask_ = m.mask_;
     }
 
     void Mask::Set_Mask(const std::string& m)
     {
-        mask.resize(m.size());
+        mask_.resize(m.size());
         for (uint32_t i = 0; i < m.size(); i++)
         {
             if (m[i] == '0')
             {
-                mask[i] = false;
+                mask_[i] = false;
             }
             else
             {
-                mask[i] = true;
+                mask_[i] = true;
             }
         }
     }
 
     const bool Mask::operator[](uint32_t index) const
     {
-        return mask[index];
+        return mask_[index];
     }
 
     /*ostream& operator<<(ostream& os, const Mask& m)
@@ -93,7 +96,7 @@ namespace hdd::gamma
 
     std::ostream& operator<<(std::ostream& os, const Mask& m)
     {
-        for (Mask_Type::const_iterator i = m.mask.begin(); i != m.mask.end(); ++i)
+        for (Mask_Type::const_iterator i = m.mask_.begin(); i != m.mask_.end(); ++i)
         {
             if (*i == true)
             {

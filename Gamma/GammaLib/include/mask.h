@@ -12,9 +12,9 @@ namespace hdd::gamma
         Mask(const uint32_t num_in);
         Mask(const Mask& m);
 
-        uint32_t Size();
-        uint32_t Length();
-        bool Empty();
+        uint32_t Size() const;
+        uint32_t Length() const;
+        bool IsEmpty() const;
         void Decrement();
         void Set_Mask(const Mask& m);
         void Set_Mask(const std::string& m);
@@ -23,6 +23,6 @@ namespace hdd::gamma
         friend std::ostream& operator<<(std::ostream& os, const Mask& m);
 
     private:
-        Mask_Type mask;
+        Mask_Type mask_;
     };
 }

@@ -1,35 +1,26 @@
 #pragma once
 
 #include "data.h"
+#include "linearregression.h"
 
 namespace hdd::gamma
 {
-    struct Regression
-    {
-        double intercept;
-        double gradient;
-        double standard_error;
-
-        friend std::ostream& operator<<(std::ostream& os, const Regression& r);
-    };
-
-    Regression Linear_Regression(const valarray_fp& x, const valarray_fp& y);
-
     class Gamma
     {
     public:
-        Gamma(const Data& d, uint32_t p, uint32_t num_m = DefaultMoments());
+        Gamma(const Data& data, uint32_t pMax, uint32_t numMoments = MomentsMin());
         friend std::ostream& operator<<(std::ostream& os, const Gamma& g);
-        static constexpr uint32_t DefaultMoments() { return 2; }
+        static constexpr uint32_t MomentsMin() { return 2; }
+        static constexpr uint32_t MomentsMax() { return 10; }
 
     private:
-        const Data& data;
-        const uint32_t pmax;
-        const uint32_t high_moments;
+        const Data& data_;
+        const uint32_t pmax_;
+        const uint32_t highMoments_;
 
-        std::vector<valarray_fp> delta;
-        std::vector<std::vector<valarray_fp>> gamma;
-        std::vector<std::vector<Regression>> r;
-        std::vector<valarray_fp> moments;
+        std::vector<valarray_fp> delta_;
+        std::vector<std::vector<valarray_fp>> gamma_;
+        std::vector<std::vector<Regression>> r_;
+        std::vector<valarray_fp> moments_;
     };
 }

@@ -142,8 +142,10 @@
     <ClInclude Include="include\results.h" />
     <ClInclude Include="include\transform.h" />
     <ClInclude Include="include\types.h" />
+    <ClInclude Include="include\linearregression.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\linearregression.cpp" />
     <ClCompile Include="src\data.cpp" />
     <ClCompile Include="src\gamma.cpp" />
     <ClCompile Include="src\iovector.cpp" />

@@ -83,7 +83,7 @@ namespace hdd::gamma
 
     uint32_t KdTree::Median(const uint32_t partitionKey, valarray_uint& indexList) const
     {
-        auto lambda = [=](const uint32_t index1, const uint32_t index2) { return data_[index1].Input_Vector(partitionKey) < data_[index2].Input_Vector(partitionKey); };
+        auto lambda = [=](const uint32_t index1, const uint32_t index2) { return data_[index1].InputValue(partitionKey) < data_[index2].InputValue(partitionKey); };
         std::nth_element(std::begin(indexList), std::begin(indexList) + indexList.size() / 2, std::end(indexList), lambda);
         auto medianIndex = indexList.size() / 2;
         return medianIndex;
@@ -99,13 +99,13 @@ namespace hdd::gamma
         {
             for (uint32_t j = 0; j < data_.Inputs(); ++j)
             {
-                if (data_[indexList[i]].Input_Vector(j) < min[j])
+                if (data_[indexList[i]].InputValue(j) < min[j])
                 {
-                    min[j] = data_[indexList[i]].Input_Vector(j);
+                    min[j] = data_[indexList[i]].InputValue(j);
                 }
-                if (data_[indexList[i]].Input_Vector(j) > max[j])
+                if (data_[indexList[i]].InputValue(j) > max[j])
                 {
-                    max[j] = data_[indexList[i]].Input_Vector(j);
+                    max[j] = data_[indexList[i]].InputValue(j);
                 }
             }
         }

@@ -5,13 +5,13 @@
 namespace hdd::gamma
 {
     Data::Data(const RawData& rawData) :
-        rawData_(rawData), transform_(rawData), data_(0), inputMask_(transform_.Inputs())
+        rawData_(rawData), transform_(rawData), inputMask_(transform_.Inputs())
     {
         CreateData();
     }
 
     Data::Data(const RawData& rawData, const std::vector<FormatType>& columnType) :
-        rawData_(rawData), transform_(rawData, columnType), data_(0), inputMask_(transform_.Inputs())
+        rawData_(rawData), transform_(rawData, columnType), inputMask_(transform_.Inputs())
     {
         if (rawData.Series() != columnType.size())
         {
@@ -21,14 +21,14 @@ namespace hdd::gamma
     }
 
     Data::Data(const Data& data, uint32_t startIndex, uint32_t endIndex) :
-        rawData_(data.rawData_), transform_(data.transform_), data_(0), inputMask_(transform_.Inputs())
+        rawData_(data.rawData_), transform_(data.transform_), inputMask_(transform_.Inputs())
     {
         // vector indexes [0..M-1]
         if (startIndex > endIndex || startIndex >= data.Size() || endIndex >= data.Size())
         {
             throw std::runtime_error("Invalid data copy");
         }
-        data_.resize(endIndex - startIndex + 1);
+        data_.reserve(endIndex - startIndex + 1);
         uint32_t newIndex = 0;
         for (uint32_t originalIndex = startIndex; originalIndex <= endIndex; ++originalIndex)
         {
@@ -38,7 +38,7 @@ namespace hdd::gamma
     }
 
     Data::Data(const Data& data, const Mask& inputMask) :
-        rawData_(data.rawData_), transform_(data.transform_), data_(0), inputMask_(inputMask)
+        rawData_(data.rawData_), transform_(data.transform_), inputMask_(inputMask)
     {
         IOVector maskedDataVector(inputMask_.Length(), data.Outputs());
         for (uint32_t i = 0; i < data.Size(); ++i)
@@ -139,11 +139,11 @@ namespace hdd::gamma
         {
             if (inputMask_[i] == true)
             {
-                dest.Input_Vector(j) = source.Input_Vector(i);
+                dest.InputValue(j) = source.InputValue(i);
                 ++j;
             }
         }
-        dest.Output_Vector() = source.Output_Vector();
+        dest.OutputVector() = source.OutputVector();
     }
 
     const IOVector& Data::operator[](uint32_t index) const

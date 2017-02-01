@@ -5,28 +5,24 @@
 
 namespace hdd::gamma
 {
-    IOVector::IOVector() :
-        input(0), output(0)
-    {}
-
     IOVector::IOVector(uint32_t in, uint32_t out) :
-        input(in), output(out)
+        input_(in), output_(out)
     {}
 
     uint32_t IOVector::Inputs() const
     {
-        return input.size();
+        return input_.size();
     }
 
     uint32_t IOVector::Outputs() const
     {
-        return output.size();
+        return output_.size();
     }
 
     void IOVector::Resize(uint32_t in, uint32_t out)
     {
-        input.resize(in);
-        output.resize(out);
+        input_.resize(in);
+        output_.resize(out);
     }
 
     valarray_fp& IOVector::operator[](const uint32_t index)
@@ -38,66 +34,66 @@ namespace hdd::gamma
 
         if (index == 0)
         {
-            return input;
+            return input_;
         }
 
-        return output;
+        return output_;
     }
 
-    const valarray_fp& IOVector::Input_Vector() const
+    const valarray_fp& IOVector::InputVector() const
     {
-        return input;
+        return input_;
     }
 
-    double IOVector::Input_Vector(uint32_t index) const
+    double IOVector::InputValue(uint32_t index) const
     {
-        if (index > input.size())
+        if (index > input_.size())
         {
             throw std::runtime_error("Invalid vector operation");
         }
-        return input[index];
+        return input_[index];
     }
 
-    double& IOVector::Input_Vector(uint32_t index)
+    double& IOVector::InputValue(uint32_t index)
     {
-        if (index > input.size())
+        if (index > input_.size())
         {
             throw std::runtime_error("Invalid vector operation");
         }
-        return input[index];
+        return input_[index];
     }
 
-    const valarray_fp& IOVector::Output_Vector() const
+    const valarray_fp& IOVector::OutputVector() const
     {
-        return output;
+        return output_;
     }
 
-    valarray_fp& IOVector::Output_Vector()
+    valarray_fp& IOVector::OutputVector()
     {
-        return output;
+        return output_;
     }
 
-    double IOVector::Output_Vector(uint32_t index) const
+    double IOVector::OutputValue(uint32_t index) const
     {
-        if (index > output.size())
+        if (index > output_.size())
         {
             throw std::runtime_error("Invalid vector operation");
         }
-        return output[index];
+        return output_[index];
     }
 
     std::ostream& operator<<(std::ostream& os, const IOVector& iov)
     {
-        for (uint32_t i = 0; i < iov.input.size(); ++i)
+        for (uint32_t i = 0; i < iov.input_.size(); ++i)
         {
-            os << iov.input[i] << " ";
+            os << iov.input_[i] << " ";
         }
 
         os << " , ";
 
-        for (uint32_t i = 0; i < iov.output.size(); ++i)
+        for (uint32_t i = 0; i < iov.output_.size(); ++i)
         {
-            os << iov.output[i] << " ";
+            os << iov.output_[i] << " ";
         }
 
         return os;

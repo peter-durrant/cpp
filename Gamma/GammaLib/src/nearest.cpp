@@ -37,8 +37,8 @@ namespace hdd::gamma
 
     double Distance(const IOVector& vector1, const IOVector& vector2, uint32_t power)
     {
-        const valarray_fp& inputs1 = vector1.Input_Vector();
-        const valarray_fp& inputs2 = vector2.Input_Vector();
+        const valarray_fp& inputs1 = vector1.InputVector();
+        const valarray_fp& inputs2 = vector2.InputVector();
 
         double distance = 0;
         for (uint32_t i = 0; i < inputs1.size(); ++i)
@@ -151,9 +151,9 @@ namespace hdd::gamma
         }
 
         const uint32_t d = root->partitionKey_; // partition key
-        const double p = kdtree_[root->median_].Input_Vector()[d];	// partition value
+        const double p = kdtree_[root->median_].InputVector()[d];	// partition value
 
-        const valarray_fp& query_input = queryPoint_.Input_Vector();
+        const valarray_fp& query_input = queryPoint_.InputVector();
         if (query_input[d] < p) // recurse on nearest child
         {
             double temp = upperBound_[d];
@@ -189,7 +189,7 @@ namespace hdd::gamma
     bool Nearest::BoundsOverlapBall()
     {
         double sum = 0;
-        const valarray_fp& query_input = queryPoint_.Input_Vector();
+        const valarray_fp& query_input = queryPoint_.InputVector();
         for (uint32_t d = 0; d < kdtree_.Dimension(); d++)
         {
             if (query_input[d] < lowerBound_[d]) // lower than low boundary

@@ -124,8 +124,8 @@ namespace hdd::gamma
                         valarray_fp local_gamma(0.0, pmax);
                         for (uint32_t l = 0; l < nn_index_list.size(); l++)
                         {
-                            const valarray_fp& output1 = data[nn_index_list[l]].Output_Vector();
-                            const valarray_fp& output2 = data[i].Output_Vector();
+                            const valarray_fp& output1 = data[nn_index_list[l]].OutputVector();
+                            const valarray_fp& output2 = data[i].OutputVector();
                             local_gamma[j] += Distance(output1[k], output2[k], m + moments_MIN);
                         }
                         gamma[m][k] += local_gamma / (double)nn_index_list.size();
